@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 199 89% 48%;
+    --radius: 0.5rem;
+
+    /* Luxury Colors */
+    --luxury-gold: 45 77% 52%;
+    --luxury-platinum: 60 5% 90%;
+    --luxury-onyx: 0 0% 6%;
+    --luxury-pearl: 0 0% 98%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 199 89% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Luxury Typography */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+
+  body {
+    @apply font-body;
+  }
+}
+
+/* Custom Scrollbar */
+@layer utilities {
+  .scrollbar-luxury::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .scrollbar-luxury::-webkit-scrollbar-track {
+    @apply bg-luxury-pearl;
+  }
+
+  .scrollbar-luxury::-webkit-scrollbar-thumb {
+    @apply bg-luxury-gold rounded-full;
+  }
+
+  .scrollbar-luxury::-webkit-scrollbar-thumb:hover {
+    @apply bg-luxury-gold-dark;
+  }
+}
+
+/* Luxury Gradient Text */
+@layer utilities {
+  .text-gradient-luxury {
+    @apply bg-gradient-to-r from-luxury-gold via-luxury-platinum to-luxury-gold bg-clip-text text-transparent;
+  }
+}
+
+/* Hexagon Pattern Background */
+@layer utilities {
+  .bg-hexagon {
+    background-image: url('/images/hexagon-pattern.svg');
+    background-size: 400px 400px;
+    background-repeat: repeat;
+  }
+}
+
+/* Glass Morphism Effect */
+@layer utilities {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-black/10 backdrop-blur-md border border-black/20;
+  }
+}
+
+/* Shimmer Loading Effect */
+@layer utilities {
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0.5) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+  }
+}
+
+/* Luxury Card Hover Effect */
+@layer components {
+  .luxury-card {
+    @apply relative overflow-hidden rounded-lg border border-luxury-platinum bg-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-[1.02];
+  }
+
+  .luxury-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-luxury-gold/5 to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .luxury-card:hover::before {
+    @apply opacity-100;
+  }
+}
+
+/* Button Luxury Styles */
+@layer components {
+  .btn-luxury {
+    @apply relative overflow-hidden bg-gradient-to-r from-luxury-gold to-luxury-gold-dark text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105;
+  }
+
+  .btn-luxury::before {
+    content: '';
+    @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-300;
+  }
+
+  .btn-luxury:hover::before {
+    @apply opacity-20;
+  }
+}

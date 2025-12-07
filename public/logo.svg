@@ -1,0 +1,26 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagonal background -->
+  <path d="M100 10L170 50L170 130L100 170L30 130L30 50Z" fill="#0F0F0F" stroke="#D4AF37" stroke-width="3"/>
+
+  <!-- Golf cart silhouette in gold -->
+  <g transform="translate(50, 60)">
+    <!-- Cart body -->
+    <rect x="10" y="30" width="80" height="35" rx="5" fill="#D4AF37"/>
+    <!-- Roof -->
+    <path d="M15 30 L85 30 L80 15 L20 15 Z" fill="#D4AF37"/>
+    <!-- Wheels -->
+    <circle cx="25" cy="72" r="12" fill="#0F0F0F" stroke="#D4AF37" stroke-width="2"/>
+    <circle cx="75" cy="72" r="12" fill="#0F0F0F" stroke="#D4AF37" stroke-width="2"/>
+    <circle cx="25" cy="72" r="6" fill="#D4AF37"/>
+    <circle cx="75" cy="72" r="6" fill="#D4AF37"/>
+    <!-- Windshield -->
+    <rect x="20" y="20" width="20" height="12" fill="#FAFAFA" opacity="0.3"/>
+    <!-- Seats -->
+    <rect x="45" y="35" width="15" height="15" rx="2" fill="#0F0F0F" opacity="0.5"/>
+    <rect x="62" y="35" width="15" height="15" rx="2" fill="#0F0F0F" opacity="0.5"/>
+  </g>
+
+  <!-- Text -->
+  <text x="100" y="150" font-family="serif" font-size="24" font-weight="bold" fill="#D4AF37" text-anchor="middle">CLUB</text>
+  <text x="100" y="175" font-family="serif" font-size="24" font-weight="bold" fill="#D4AF37" text-anchor="middle">CADDY</text>
+</svg>
