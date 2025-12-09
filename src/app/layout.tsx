@@ -3,9 +3,11 @@ import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import { AuthProvider } from "@/context/AuthContext"
 import { CartProvider } from "@/context/CartContext"
+import { LanguageProvider } from "@/context/LanguageContext"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import CartDrawer from "@/components/cart/CartDrawer"
+import StructuredData from "@/components/seo/StructuredData"
 import "./globals.css"
 
 const inter = Inter({
@@ -27,22 +29,21 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: {
-    default: "Club Caddy Carts | Premium Electric Golf Carts NZ",
-    template: "%s | Club Caddy Carts",
-  },
-  description:
-    "New Zealand's premium electric golf cart supplier. From 2-seater to 20-seater carts with cutting-edge 72V lithium battery technology. Sales, hire & custom builds available.",
+  title: 'Club Caddy Carts | Premium 72V Electric Golf Carts Auckland NZ - Sales & Hire',
+  description: 'Auckland\'s premier electric golf cart supplier. Advanced 72V lithium technology, superior range & performance. Sales, hire & service across New Zealand. View our premium golf buggy range.',
   keywords: [
-    "electric golf carts NZ",
-    "golf cart hire New Zealand",
-    "electric golf buggy",
-    "club caddy",
-    "72V lithium golf cart",
-    "golf cart sales NZ",
-    "premium golf carts",
+    'electric golf cart Auckland',
+    'golf cart hire Auckland',
+    'golf buggy NZ',
+    '72V lithium golf cart',
+    'electric golf buggy Auckland',
+    'golf cart sales New Zealand',
+    'premium golf carts Auckland',
+    'golf cart rental Auckland',
+    'lithium battery golf cart',
+    'electric cart hire NZ'
   ],
-  authors: [{ name: "Club Caddy Carts" }],
+  authors: [{ name: 'Club Caddy Carts' }],
   creator: "Club Caddy Carts",
   publisher: "Club Caddy Carts",
   formatDetection: {
@@ -62,28 +63,26 @@ export const metadata: Metadata = {
     shortcut: '/images/logo.png',
   },
   openGraph: {
-    type: "website",
-    locale: "en_NZ",
-    url: "https://clubcaddycarts.com",
-    title: "Club Caddy Carts | Premium Electric Golf Carts NZ",
-    description:
-      "New Zealand's premium electric golf cart supplier. 72V lithium battery carts with 100km+ range. Sales, hire & custom builds.",
-    siteName: "Club Caddy Carts",
+    title: 'Club Caddy Carts | Premium 72V Electric Golf Carts Auckland',
+    description: 'Auckland\'s premier electric golf cart supplier with advanced 72V lithium technology. Sales, hire & service across New Zealand.',
+    url: 'https://clubcaddycarts.com',
+    siteName: 'Club Caddy Carts',
+    locale: 'en_NZ',
+    type: 'website',
     images: [
       {
-        url: '/logo.svg',
-        width: 200,
-        height: 200,
-        alt: 'Club Caddy Carts Logo',
-      },
-    ],
+        url: '/images/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Club Caddy Carts - Premium Electric Golf Carts Auckland'
+      }
+    ]
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Club Caddy Carts | Premium Electric Golf Carts NZ",
-    description:
-      "New Zealand's premium electric golf cart supplier. 72V lithium battery carts with 100km+ range.",
-    images: ['/logo.svg'],
+    card: 'summary_large_image',
+    title: 'Club Caddy Carts | Premium 72V Electric Golf Carts Auckland',
+    description: 'Auckland\'s premier electric golf cart supplier with 72V lithium technology',
+    images: ['/images/logo.png']
   },
   robots: {
     index: true,
@@ -91,11 +90,14 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    }
   },
+  verification: {
+    google: 'your-google-verification-code-here'
+  }
 }
 
 export default function RootLayout({
@@ -105,18 +107,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${jetbrainsMono.variable}`}>
-      <body className="min-h-screen bg-luxury-pearl antialiased">
-        <AuthProvider>
-          <CartProvider>
-            <Header />
-            <main className="pt-20">
-              {children}
-            </main>
-            <Footer />
-            <CartDrawer />
-            <Analytics />
-          </CartProvider>
-        </AuthProvider>
+      <body className="min-h-screen bg-white antialiased">
+        <StructuredData />
+        <LanguageProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Header />
+              <main className="pt-20">
+                {children}
+              </main>
+              <Footer />
+              <CartDrawer />
+              <Analytics />
+            </CartProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

@@ -10,32 +10,54 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Luxury Brand Colors
+        // Brand Colors (from logo)
+        brand: {
+          crimson: '#B91C1C',        // Deep red from logo circle
+          'crimson-light': '#DC2626', // Lighter crimson
+          'crimson-dark': '#991B1B',  // Darker crimson
+          charcoal: '#1F2937',        // Dark gray from cart
+          'charcoal-light': '#374151',
+          'charcoal-dark': '#111827',
+          pearl: '#F9FAFB',           // Off-white from cart body
+          'pearl-light': '#FFFFFF',
+          'pearl-dark': '#F3F4F6',
+          silver: '#9CA3AF',          // Neutral gray
+          'silver-light': '#D1D5DB',
+          'silver-dark': '#6B7280',
+        },
+        // Primary Colors (Crimson Red)
+        primary: {
+          50: '#fef2f2',
+          100: '#fee2e2',
+          200: '#fecaca',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
+          800: '#991b1b',
+          900: '#7f1d1d',
+          950: '#450a0a',
+        },
+        // Rose colors for Refined Elegance theme
+        rose: {
+          50: '#fff1f2',
+          100: '#ffe4e6',
+          200: '#fecdd3',
+          300: '#fda4af',
+          400: '#fb7185',
+          500: '#f43f5e',
+          600: '#e11d48',
+          700: '#be123c',
+          800: '#9f1239',
+          900: '#881337',
+          950: '#4c0519',
+        },
+        // Luxury accent colors (keeping some sophistication)
         luxury: {
           gold: '#D4AF37',
           'gold-light': '#F4E5B8',
           'gold-dark': '#B8941F',
-          platinum: '#E5E4E2',
-          'platinum-light': '#F5F5F3',
-          'platinum-dark': '#CFCECB',
-          onyx: '#0F0F0F',
-          'onyx-light': '#2A2A2A',
-          pearl: '#FAFAFA',
-          'pearl-dark': '#F0F0F0',
-        },
-        // Primary Colors (Ocean Blue)
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0284c7',
-          600: '#0369a1',
-          700: '#075985',
-          800: '#0c4a6e',
-          900: '#0c3857',
-          950: '#082f49',
         },
         // Semantic Colors
         success: '#10b981',
@@ -104,6 +126,19 @@ const config: Config = {
           from: { transform: 'translateY(20px)', opacity: '0' },
           to: { transform: 'translateY(0)', opacity: '1' },
         },
+        // Refined Elegance animations
+        breathe: {
+          '0%, 100%': { opacity: '0.08' },
+          '50%': { opacity: '0.15' },
+        },
+        'subtle-slide': {
+          from: { transform: 'translateY(20px)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
+        },
+        'video-fade': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -111,6 +146,10 @@ const config: Config = {
         shimmer: 'shimmer 2s infinite',
         'fade-in': 'fade-in 0.5s ease-out',
         'slide-up': 'slide-up 0.5s ease-out',
+        // Refined Elegance animations
+        breathe: 'breathe 5s ease-in-out infinite',
+        'subtle-slide': 'subtle-slide 0.8s ease-out forwards',
+        'video-fade': 'video-fade 1.5s ease-out forwards',
       },
       backgroundImage: {
         'hexagon-pattern': "url('/images/hexagon-pattern.svg')",

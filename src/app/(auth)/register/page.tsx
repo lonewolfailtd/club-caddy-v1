@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
+import { useLanguage } from '@/context/LanguageContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,6 +18,7 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const { signUp } = useAuth()
+  const { language } = useLanguage()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,31 +51,33 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-luxury-onyx via-primary-900 to-luxury-onyx px-4 py-12 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 bg-hexagon opacity-10" />
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 hexagon-pattern-minimal opacity-[0.02]" />
 
-        <Card className="relative z-10 w-full max-w-md border-luxury-gold/20 bg-white/95 backdrop-blur-sm">
+        <Card className="relative z-10 w-full max-w-md border-zinc-200 bg-white shadow-lg">
           <CardHeader className="space-y-1">
-            <CardTitle className="font-playfair text-3xl text-center text-luxury-onyx">
-              Check Your Email
+            <CardTitle className="refined-title text-3xl text-center text-zinc-900">
+              {language === 'en' ? 'Check Your Email' : '检查您的邮箱'}
             </CardTitle>
-            <CardDescription className="text-center">
-              We've sent you a confirmation email
+            <CardDescription className="refined-body text-center text-zinc-600">
+              {language === 'en' ? "We've sent you a confirmation email" : '我们已向您发送确认电子邮件'}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
             <div className="rounded-md bg-green-50 p-4 text-center border border-green-200">
-              <p className="text-sm text-green-800">
-                Please check your email inbox and click the confirmation link to activate your account.
+              <p className="refined-body text-sm text-green-800">
+                {language === 'en'
+                  ? 'Please check your email inbox and click the confirmation link to activate your account.'
+                  : '请检查您的电子邮件收件箱并点击确认链接以激活您的帐户。'}
               </p>
             </div>
           </CardContent>
 
           <CardFooter>
             <Link href="/login" className="w-full">
-              <Button className="w-full bg-gradient-to-r from-luxury-gold to-primary-600 hover:from-luxury-gold/90 hover:to-primary-700">
-                Go to Login
+              <Button className="refined-body w-full bg-rose-800 hover:bg-rose-900 text-white font-semibold">
+                {language === 'en' ? 'Go to Login' : '前往登录'}
               </Button>
             </Link>
           </CardFooter>
@@ -83,56 +87,62 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-luxury-onyx via-primary-900 to-luxury-onyx px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 py-12 sm:px-6 lg:px-8">
       {/* Hexagon Pattern Overlay */}
-      <div className="absolute inset-0 bg-hexagon opacity-10" />
+      <div className="absolute inset-0 hexagon-pattern-minimal opacity-[0.02]" />
 
-      <Card className="relative z-10 w-full max-w-md border-luxury-gold/20 bg-white/95 backdrop-blur-sm">
+      <Card className="relative z-10 w-full max-w-md border-zinc-200 bg-white shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="font-playfair text-3xl text-center text-luxury-onyx">
-            Create Account
+          <CardTitle className="refined-title text-3xl text-center text-zinc-900">
+            {language === 'en' ? 'Create Account' : '创建账户'}
           </CardTitle>
-          <CardDescription className="text-center">
-            Join Club Caddy and start shopping
+          <CardDescription className="refined-body text-center text-zinc-600">
+            {language === 'en' ? 'Join Club Caddy and start shopping' : '加入 Club Caddy 开始购物'}
           </CardDescription>
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && (
-              <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 border border-red-200">
+              <div className="rounded-md bg-red-50 p-3 refined-body text-sm text-red-800 border border-red-200">
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName" className="refined-body text-zinc-700">
+                {language === 'en' ? 'Full Name' : '全名'}
+              </Label>
               <Input
                 id="fullName"
                 type="text"
-                placeholder="John Smith"
+                placeholder={language === 'en' ? 'John Smith' : '张三'}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                className="border-luxury-platinum/30 focus:border-luxury-gold"
+                className="refined-body border-zinc-300 focus:border-rose-800 focus:ring-rose-800"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="refined-body text-zinc-700">
+                {language === 'en' ? 'Email' : '电子邮件'}
+              </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={language === 'en' ? 'you@example.com' : 'your@example.com'}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-luxury-platinum/30 focus:border-luxury-gold"
+                className="refined-body border-zinc-300 focus:border-rose-800 focus:ring-rose-800"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="refined-body text-zinc-700">
+                {language === 'en' ? 'Password' : '密码'}
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -141,15 +151,17 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="border-luxury-platinum/30 focus:border-luxury-gold"
+                className="refined-body border-zinc-300 focus:border-rose-800 focus:ring-rose-800"
               />
-              <p className="text-xs text-gray-500">
-                Must be at least 6 characters
+              <p className="refined-body text-xs text-zinc-500">
+                {language === 'en' ? 'Must be at least 6 characters' : '至少需要 6 个字符'}
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword" className="refined-body text-zinc-700">
+                {language === 'en' ? 'Confirm Password' : '确认密码'}
+              </Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -158,7 +170,7 @@ export default function RegisterPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 minLength={6}
-                className="border-luxury-platinum/30 focus:border-luxury-gold"
+                className="refined-body border-zinc-300 focus:border-rose-800 focus:ring-rose-800"
               />
             </div>
           </CardContent>
@@ -166,30 +178,32 @@ export default function RegisterPage() {
           <CardFooter className="flex flex-col space-y-4">
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-luxury-gold to-primary-600 hover:from-luxury-gold/90 hover:to-primary-700 text-white font-semibold"
+              className="refined-body w-full bg-rose-800 hover:bg-rose-900 text-white font-semibold"
               disabled={loading}
             >
-              {loading ? 'Creating account...' : 'Create Account'}
+              {loading
+                ? (language === 'en' ? 'Creating account...' : '正在创建账户...')
+                : (language === 'en' ? 'Create Account' : '创建账户')}
             </Button>
 
-            <p className="text-center text-sm text-gray-600">
-              Already have an account?{' '}
+            <p className="refined-body text-center text-sm text-zinc-600">
+              {language === 'en' ? 'Already have an account?' : '已有账户？'}{' '}
               <Link
                 href="/login"
-                className="text-primary-600 hover:text-primary-700 font-semibold transition-colors"
+                className="text-rose-800 hover:text-rose-900 font-semibold transition-colors"
               >
-                Sign in
+                {language === 'en' ? 'Sign in' : '登录'}
               </Link>
             </p>
 
-            <p className="text-center text-xs text-gray-500">
-              By creating an account, you agree to our{' '}
-              <Link href="/terms" className="text-primary-600 hover:underline">
-                Terms of Service
+            <p className="refined-body text-center text-xs text-zinc-500">
+              {language === 'en' ? 'By creating an account, you agree to our' : '创建账户即表示您同意我们的'}{' '}
+              <Link href="/terms" className="text-rose-800 hover:underline">
+                {language === 'en' ? 'Terms of Service' : '服务条款'}
               </Link>{' '}
-              and{' '}
-              <Link href="/privacy" className="text-primary-600 hover:underline">
-                Privacy Policy
+              {language === 'en' ? 'and' : '和'}{' '}
+              <Link href="/privacy" className="text-rose-800 hover:underline">
+                {language === 'en' ? 'Privacy Policy' : '隐私政策'}
               </Link>
             </p>
           </CardFooter>

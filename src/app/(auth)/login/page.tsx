@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
+import { useLanguage } from '@/context/LanguageContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { signIn } = useAuth()
+  const { language } = useLanguage()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,43 +31,47 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-luxury-onyx via-primary-900 to-luxury-onyx px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 py-12 sm:px-6 lg:px-8">
       {/* Hexagon Pattern Overlay */}
-      <div className="absolute inset-0 bg-hexagon opacity-10" />
+      <div className="absolute inset-0 hexagon-pattern-minimal opacity-[0.02]" />
 
-      <Card className="relative z-10 w-full max-w-md border-luxury-gold/20 bg-white/95 backdrop-blur-sm">
+      <Card className="relative z-10 w-full max-w-md border-zinc-200 bg-white shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="font-playfair text-3xl text-center text-luxury-onyx">
-            Welcome Back
+          <CardTitle className="refined-title text-3xl text-center text-zinc-900">
+            {language === 'en' ? 'Welcome Back' : '欢迎回来'}
           </CardTitle>
-          <CardDescription className="text-center">
-            Sign in to your Club Caddy account
+          <CardDescription className="refined-body text-center text-zinc-600">
+            {language === 'en' ? 'Sign in to your Club Caddy account' : '登录您的 Club Caddy 账户'}
           </CardDescription>
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && (
-              <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 border border-red-200">
+              <div className="rounded-md bg-red-50 p-3 refined-body text-sm text-red-800 border border-red-200">
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="refined-body text-zinc-700">
+                {language === 'en' ? 'Email' : '电子邮件'}
+              </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={language === 'en' ? 'you@example.com' : 'your@example.com'}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-luxury-platinum/30 focus:border-luxury-gold"
+                className="refined-body border-zinc-300 focus:border-rose-800 focus:ring-rose-800"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="refined-body text-zinc-700">
+                {language === 'en' ? 'Password' : '密码'}
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -73,16 +79,16 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="border-luxury-platinum/30 focus:border-luxury-gold"
+                className="refined-body border-zinc-300 focus:border-rose-800 focus:ring-rose-800"
               />
             </div>
 
             <div className="flex items-center justify-between text-sm">
               <Link
                 href="/reset-password"
-                className="text-primary-600 hover:text-primary-700 transition-colors"
+                className="refined-body text-rose-800 hover:text-rose-900 transition-colors"
               >
-                Forgot password?
+                {language === 'en' ? 'Forgot password?' : '忘记密码？'}
               </Link>
             </div>
           </CardContent>
@@ -90,34 +96,38 @@ export default function LoginPage() {
           <CardFooter className="flex flex-col space-y-4">
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-luxury-gold to-primary-600 hover:from-luxury-gold/90 hover:to-primary-700 text-white font-semibold"
+              className="refined-body w-full bg-rose-800 hover:bg-rose-900 text-white font-semibold"
               disabled={loading}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading
+                ? (language === 'en' ? 'Signing in...' : '正在登录...')
+                : (language === 'en' ? 'Sign In' : '登录')}
             </Button>
 
-            <p className="text-center text-sm text-gray-600">
-              Don't have an account?{' '}
+            <p className="refined-body text-center text-sm text-zinc-600">
+              {language === 'en' ? "Don't have an account?" : '还没有账户？'}{' '}
               <Link
                 href="/register"
-                className="text-primary-600 hover:text-primary-700 font-semibold transition-colors"
+                className="text-rose-800 hover:text-rose-900 font-semibold transition-colors"
               >
-                Create an account
+                {language === 'en' ? 'Create an account' : '创建账户'}
               </Link>
             </p>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className="w-full border-t border-zinc-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-2 text-gray-500">Or</span>
+                <span className="refined-body bg-white px-2 text-zinc-500">
+                  {language === 'en' ? 'Or' : '或'}
+                </span>
               </div>
             </div>
 
             <Link href="/" className="w-full">
-              <Button type="button" variant="outline" className="w-full">
-                Continue as Guest
+              <Button type="button" variant="outline" className="refined-body w-full border-zinc-300 text-zinc-700 hover:bg-zinc-50">
+                {language === 'en' ? 'Continue as Guest' : '以访客身份继续'}
               </Button>
             </Link>
           </CardFooter>
