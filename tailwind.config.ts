@@ -144,9 +144,9 @@ const config: Config = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         shimmer: 'shimmer 2s infinite',
-        'fade-in': 'fade-in 0.5s ease-out',
-        'slide-up': 'slide-up 0.5s ease-out',
-        // Refined Elegance animations
+        'fade-in': 'fade-in 0.3s ease-out',
+        'slide-up': 'slide-up 0.3s ease-out',
+        // Refined Elegance animations - standardized timing
         breathe: 'breathe 5s ease-in-out infinite',
         'subtle-slide': 'subtle-slide 0.8s ease-out forwards',
         'video-fade': 'video-fade 1.5s ease-out forwards',

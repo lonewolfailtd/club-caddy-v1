@@ -23,7 +23,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { cart, openCart } = useCart()
-  const { user, loading, signOut } = useAuth()
+  const { user, loading, signOut, isAdmin } = useAuth()
   const { language, toggleLanguage } = useLanguage()
   const t = commonTranslations[language]
   const pathname = usePathname()
@@ -31,8 +31,8 @@ export default function Header() {
   const navigation = [
     { name: t.nav.home, href: '/' },
     { name: t.nav.products, href: '/products' },
+    { name: 'Events & Rentals', href: '/events' },
     { name: t.nav.about, href: '/about' },
-    { name: t.nav.hire, href: '/hire' },
     { name: t.nav.contact, href: '/contact' },
   ]
 
@@ -114,6 +114,13 @@ export default function Header() {
           {/* Desktop Actions */}
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:ml-24">
             <div className="flex gap-x-3 items-center">
+              {/* Request Quote Button */}
+              <Link href="/quote">
+                <Button className="refined-body bg-rose-800 hover:bg-rose-900 shadow-sm hover:shadow-md transition-all duration-300 !text-white text-xs uppercase tracking-wider">
+                  {language === 'en' ? 'Request Quote' : '申请报价'}
+                </Button>
+              </Link>
+
               {/* Cart Button */}
               <button
                 onClick={openCart}
@@ -148,6 +155,17 @@ export default function Header() {
                       {t.nav.myAccount}
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-zinc-200" />
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuItem asChild className="hover:bg-rose-50 hover:text-rose-800 cursor-pointer refined-body">
+                          <Link href="/admin" className="flex items-center">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Admin Dashboard</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-zinc-200" />
+                      </>
+                    )}
                     <DropdownMenuItem asChild className="hover:bg-rose-50 hover:text-rose-800 cursor-pointer refined-body">
                       <Link href="/account" className="flex items-center">
                         <User className="mr-2 h-4 w-4" />
@@ -276,6 +294,16 @@ export default function Header() {
                 </Link>
               )
             })}
+
+            {/* Mobile Request Quote Button */}
+            <div className="pt-4 mt-4 border-t border-zinc-200">
+              <Link
+                href="/quote"
+                className="block rounded-lg px-4 py-3 text-center text-base font-semibold refined-body bg-rose-800 text-white hover:bg-rose-900 shadow-sm"
+              >
+                {language === 'en' ? 'Request Quote' : '申请报价'}
+              </Link>
+            </div>
 
             {/* Mobile User Menu */}
             <div className="pt-4 space-y-2 border-t border-zinc-200 mt-4">

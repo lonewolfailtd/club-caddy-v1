@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/context/LanguageContext"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
 import CartDrawer from "@/components/cart/CartDrawer"
+import Chatbot from "@/components/chat/Chatbot"
 import StructuredData from "@/components/seo/StructuredData"
 import "./globals.css"
 
@@ -96,7 +97,7 @@ export const metadata: Metadata = {
     }
   },
   verification: {
-    google: 'your-google-verification-code-here'
+    google: 'google-site-verification-code-here' // Replace with actual code from Google Search Console
   }
 }
 
@@ -118,6 +119,7 @@ export default function RootLayout({
               </main>
               <Footer />
               <CartDrawer />
+              <Chatbot />
               <Analytics />
             </CartProvider>
           </AuthProvider>

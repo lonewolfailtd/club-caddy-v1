@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { useLanguage } from '@/context/LanguageContext'
 import ProductFilters, { FilterState } from '@/components/products/ProductFilters'
 import ProductGrid from '@/components/products/ProductGrid'
 
@@ -49,7 +50,7 @@ const translations = {
 }
 
 export default function ProductsClient({ products }: ProductsClientProps) {
-  const [language, setLanguage] = useState<'en' | 'zh'>('en')
+  const { language } = useLanguage()
   const t = translations[language]
 
   // Calculate min and max prices
@@ -139,28 +140,6 @@ export default function ProductsClient({ products }: ProductsClientProps) {
 
         {/* Elegant top accent */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-rose-800/30 to-transparent" />
-
-        {/* Language Toggle Button - Top Right */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="absolute top-8 right-8 z-30"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full text-zinc-900 hover:border-rose-800 hover:bg-white transition-all shadow-sm hover:shadow-md"
-          >
-            <span className="refined-body text-xs font-medium uppercase tracking-wider">
-              {language === 'en' ? '中文' : 'EN'}
-            </span>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-            </svg>
-          </motion.button>
-        </motion.div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
           <motion.div

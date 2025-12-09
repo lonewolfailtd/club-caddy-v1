@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
 
 export interface HeroStat {
   value: string
@@ -73,21 +74,14 @@ export default function RefinedHero({
             style={{ animation: 'subtle-slide 0.8s ease-out 0.1s both' }}
           >
             <div className="w-1.5 h-1.5 bg-rose-800 rounded-full"></div>
-            <span
-              className="text-xs text-zinc-600 uppercase tracking-[0.15em] font-medium"
-              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.01em' }}
-            >
+            <span className="text-xs text-zinc-600 uppercase tracking-[0.15em] font-medium refined-body">
               {badge}
             </span>
           </div>
 
           <h1
-            className="text-7xl md:text-8xl font-bold text-zinc-900 mb-6 leading-[1.1]"
-            style={{
-              fontFamily: 'Playfair Display, serif',
-              letterSpacing: '-0.01em',
-              animation: 'subtle-slide 0.8s ease-out 0.2s both'
-            }}
+            className="text-7xl md:text-8xl font-bold text-zinc-900 mb-6 leading-[1.1] refined-title"
+            style={{ animation: 'subtle-slide 0.8s ease-out 0.2s both' }}
           >
             {title}
           </h1>
@@ -98,13 +92,8 @@ export default function RefinedHero({
           ></div>
 
           <p
-            className="text-xl text-zinc-900 mb-12 max-w-2xl mx-auto font-semibold leading-relaxed"
-            style={{
-              fontFamily: 'Inter, sans-serif',
-              letterSpacing: '-0.01em',
-              textShadow: '0 1px 3px rgba(255, 255, 255, 0.8)',
-              animation: 'subtle-slide 0.8s ease-out 0.3s both'
-            }}
+            className="text-xl text-zinc-900 mb-12 max-w-2xl mx-auto font-semibold leading-relaxed text-shadow-white refined-body"
+            style={{ animation: 'subtle-slide 0.8s ease-out 0.3s both' }}
           >
             {subtitle}
           </p>
@@ -116,24 +105,24 @@ export default function RefinedHero({
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex gap-4 justify-center mb-20"
           >
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={primaryCTA.onClick}
-              className="px-10 py-4 bg-zinc-900 text-white font-medium text-sm uppercase tracking-[0.1em] hover:bg-rose-900 transition-all duration-300 rounded-sm shadow-lg hover:shadow-xl"
-              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.01em' }}
-            >
-              {primaryCTA.text}
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={secondaryCTA.onClick}
-              className="px-10 py-4 border-2 border-zinc-900 text-zinc-900 font-medium text-sm uppercase tracking-[0.1em] hover:border-rose-800 hover:text-rose-900 hover:bg-rose-50 transition-all duration-300 rounded-sm"
-              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.01em' }}
-            >
-              {secondaryCTA.text}
-            </motion.button>
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                onClick={primaryCTA.onClick}
+                variant="elegant"
+                className="px-10 py-4 uppercase tracking-wider refined-body"
+              >
+                {primaryCTA.text}
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                onClick={secondaryCTA.onClick}
+                variant="outline"
+                className="px-10 py-4 uppercase tracking-wider border-zinc-900 text-zinc-900 hover:border-rose-800 hover:text-rose-900 hover:bg-rose-50 refined-body"
+              >
+                {secondaryCTA.text}
+              </Button>
+            </motion.div>
           </motion.div>
 
           {/* Refined stats */}
@@ -155,16 +144,10 @@ export default function RefinedHero({
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-px bg-gradient-to-r from-transparent via-rose-800/20 to-transparent"></div>
 
                 <div className="pt-6 pb-6">
-                  <div
-                    className="text-5xl font-bold text-zinc-900 mb-2"
-                    style={{ fontFamily: 'Playfair Display, serif', letterSpacing: '-0.01em' }}
-                  >
+                  <div className="text-5xl font-bold text-zinc-900 mb-2 refined-title">
                     {stat.value}
                   </div>
-                  <div
-                    className="text-xs text-zinc-500 uppercase tracking-wider"
-                    style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.01em' }}
-                  >
+                  <div className="text-xs text-zinc-500 uppercase tracking-wider refined-body">
                     {stat.label}
                   </div>
                 </div>
@@ -176,20 +159,6 @@ export default function RefinedHero({
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes breathe {
-          0%, 100% { opacity: 0.08; }
-          50% { opacity: 0.15; }
-        }
-        @keyframes subtle-slide {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes video-fade {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
     </section>
   )
 }

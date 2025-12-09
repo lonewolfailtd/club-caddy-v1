@@ -113,6 +113,23 @@
   .scrollbar-luxury::-webkit-scrollbar-thumb:hover {
     @apply bg-luxury-gold-dark;
   }
+
+  /* Thin scrollbar for chat */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-rose-200 rounded-full;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    @apply bg-rose-300;
+  }
 }
 
 /* Luxury Gradient Text */
@@ -200,37 +217,8 @@
   }
 }
 
-/* Refined Elegance Animations */
+/* Refined Elegance Animations - Utility Classes */
 @layer utilities {
-  @keyframes breathe {
-    0%, 100% {
-      opacity: 0.08;
-    }
-    50% {
-      opacity: 0.15;
-    }
-  }
-
-  @keyframes subtle-slide {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes video-fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
   .breathing-hex {
     animation: breathe 5s ease-in-out infinite;
   }

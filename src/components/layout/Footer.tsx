@@ -82,15 +82,6 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/about"
-                  className="group inline-flex items-center refined-body text-sm text-zinc-600 transition-colors hover:text-rose-800"
-                >
-                  <span className="mr-2 text-zinc-400 transition-transform group-hover:translate-x-1">→</span>
-                  {t.nav.about}
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/products"
                   className="group inline-flex items-center refined-body text-sm text-zinc-600 transition-colors hover:text-rose-800"
                 >
@@ -105,6 +96,15 @@ export default function Footer() {
                 >
                   <span className="mr-2 text-zinc-400 transition-transform group-hover:translate-x-1">→</span>
                   {t.nav.hire}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="group inline-flex items-center refined-body text-sm text-zinc-600 transition-colors hover:text-rose-800"
+                >
+                  <span className="mr-2 text-zinc-400 transition-transform group-hover:translate-x-1">→</span>
+                  {t.nav.about}
                 </Link>
               </li>
               <li>

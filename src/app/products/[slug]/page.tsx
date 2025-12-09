@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { formatPrice } from '@/lib/utils'
+import { useLanguage } from '@/context/LanguageContext'
 import AddToCartButton from '@/components/products/AddToCartButton'
 import ProductGallery from '@/components/products/ProductGallery'
 import { useState, useEffect } from 'react'
@@ -23,7 +24,7 @@ const translations = {
     customizeCart: 'Customise Your Cart',
     customizeDescription: 'Enhance your golf cart with premium add-ons and accessories.',
     readyToOrder: 'Ready to Order?',
-    contactWarren: 'Contact Warren today for viewings, quotes or to discuss your custom requirements.',
+    contactUs: 'Contact us today for viewings, quotes or to discuss your custom requirements.',
     depositInfo: 'Secure your order with a $1,000 deposit • Delivery in approximately 6 weeks',
     standardPackage: 'Standard Package',
     premiumPackage: 'Premium Package',
@@ -39,7 +40,7 @@ const translations = {
     customizeCart: '定制您的球车',
     customizeDescription: '使用高级附加组件和配件增强您的高尔夫球车。',
     readyToOrder: '准备订购？',
-    contactWarren: '立即联系Warren查看、报价或讨论您的定制需求。',
+    contactUs: '立即联系我们查看、报价或讨论您的定制需求。',
     depositInfo: '以 $1,000 定金预订 • 大约 6 周内交付',
     standardPackage: '标准套餐',
     premiumPackage: '高级套餐',
@@ -49,10 +50,10 @@ const translations = {
 }
 
 export default function ProductPage({ params }: Props) {
+  const { language } = useLanguage()
   const [product, setProduct] = useState<any>(null)
   const [addons, setAddons] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [language, setLanguage] = useState<'en' | 'zh'>('en')
 
   useEffect(() => {
     async function fetchData() {
@@ -110,21 +111,6 @@ export default function ProductPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Language Toggle - Top Right */}
-      <div className="fixed top-8 right-8 z-50">
-        <button
-          onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
-          className="flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full text-zinc-900 hover:border-rose-800 hover:bg-white transition-all shadow-sm hover:shadow-md"
-        >
-          <span className="text-xs font-medium uppercase tracking-wider">
-            {language === 'en' ? '中文' : 'EN'}
-          </span>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-          </svg>
-        </button>
-      </div>
-
       {/* Hero Section */}
       <section className={`relative overflow-hidden bg-gradient-to-br ${tierColors[product.tier as keyof typeof tierColors]}`}>
         {/* Reduced opacity hexagon pattern for subtlety */}
@@ -226,12 +212,12 @@ export default function ProductPage({ params }: Props) {
                 {/* CTA Buttons */}
                 <div className="mt-8 space-y-4">
                   <AddToCartButton product={product} />
-                  <a
-                    href="#contact"
+                  <Link
+                    href={`/quote?product=${product.slug}`}
                     className="block w-full rounded-sm px-8 py-3 text-center text-sm font-semibold text-white border-2 border-zinc-700 hover:border-rose-800 hover:bg-rose-900/20 transition-all uppercase tracking-wider"
                   >
                     {t.requestQuote}
-                  </a>
+                  </Link>
                   <Link
                     href="/products"
                     className="block w-full rounded-sm px-8 py-3 text-center text-sm font-semibold text-zinc-400 hover:text-white transition-all uppercase tracking-wider"
@@ -292,14 +278,14 @@ export default function ProductPage({ params }: Props) {
               {t.readyToOrder}
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-zinc-300 font-light">
-              {t.contactWarren}
+              {t.contactUs}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
               <a
                 href="tel:+64021560307"
                 className="w-full sm:w-auto px-8 py-3 bg-rose-800 text-white font-medium text-sm uppercase tracking-wider hover:bg-rose-900 transition-all rounded-sm shadow-lg hover:shadow-xl"
               >
-                +64-021-560-307
+                +64 021 560 307
               </a>
               <a
                 href="mailto:admin@clubcaddycarts.com"

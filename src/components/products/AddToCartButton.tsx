@@ -1,6 +1,7 @@
 'use client'
 
 import { useCart } from '@/context/CartContext'
+import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 
 interface AddToCartButtonProps {
@@ -32,10 +33,11 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
   }
 
   return (
-    <button
+    <Button
       onClick={handleAddToCart}
       disabled={isAdding}
-      className="w-full px-8 py-4 bg-rose-800 text-white font-medium text-sm uppercase tracking-wider hover:bg-rose-900 transition-all rounded-sm shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+      variant="elegant"
+      className="w-full px-8 py-4 uppercase tracking-wider"
     >
       {isAdding ? (
         <span className="flex items-center justify-center">
@@ -48,6 +50,6 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
       ) : (
         'Add to Cart'
       )}
-    </button>
+    </Button>
   )
 }

@@ -44,3 +44,6 @@ test-results/
 # Misc
 *.log
 .cache
+# Large video files
+public/videos/*.mp4
+*.mp4
