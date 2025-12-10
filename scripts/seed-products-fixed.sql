@@ -369,15 +369,8 @@ SELECT
 FROM products
 ORDER BY base_price ASC;
 
--- Check add-ons if table exists
-DO $$
-BEGIN
-  IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'addons') THEN
-    PERFORM (
-      SELECT
-        '✅ Add-ons Added:' as status,
-        COUNT(*) as count
-      FROM addons
-    );
-  END IF;
-END $$;
+-- Check add-ons if table exists (optional - comment out if addons table doesn't exist)
+SELECT
+  '✅ Add-ons Added:' as status,
+  COUNT(*) as count
+FROM addons;
