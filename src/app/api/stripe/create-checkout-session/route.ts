@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const validationResult = sessionSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: validationResult.error.errors[0].message },
+        { error: 'Invalid request data', details: validationResult.error.issues },
         { status: 400 }
       );
     }
@@ -30,8 +30,8 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     // Get booking details with product information
-    const { data: booking, error: bookingError } = await supabase
-      .from('bookings')
+    const { data: booking, error: bookingError } = await (supabase
+      .from('bookings') as any)
       .select(`
         *,
         products (
@@ -135,8 +135,8 @@ export async function POST(request: NextRequest) {
     });
 
     // Update booking with Stripe session ID
-    const { error: updateError } = await supabase
-      .from('bookings')
+    const { error: updateError } = await (supabase
+      .from('bookings') as any)
       .update({
         stripe_session_id: session.id,
         payment_status: 'processing',
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: error.errors[0].message },
+        { error: 'Invalid request data', details: error.issues },
         { status: 400 }
       );
     }

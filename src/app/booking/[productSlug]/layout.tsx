@@ -9,8 +9,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { productSlug } = await params
   const supabase = await createClient()
 
-  const { data: product } = await supabase
-    .from('products')
+  const { data: product } = await (supabase
+    .from('products') as any)
     .select('name, description, short_description, images')
     .eq('slug', productSlug)
     .eq('rental_enabled', true)

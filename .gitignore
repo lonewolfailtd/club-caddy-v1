@@ -48,3 +48,5 @@ test-results/
 # Large video files (exclude backups and originals)
 public/videos/*-original.mp4
 public/videos/*-backup.mp4
+
+.vercel

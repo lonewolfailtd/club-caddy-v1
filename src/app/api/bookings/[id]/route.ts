@@ -112,7 +112,7 @@ export async function PATCH(
     const validationResult = updateSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: validationResult.error.errors[0].message },
+        { error: 'Invalid request data', details: validationResult.error.issues },
         { status: 400 }
       );
     }
@@ -134,9 +134,9 @@ export async function PATCH(
       updateData.cancelled_at = new Date().toISOString();
     }
 
-    // Update booking
-    const { data: booking, error } = await supabase
-      .from('bookings')
+    // Update booking - cast to proper type for Supabase
+    const { data: booking, error } = await (supabase
+      .from('bookings') as any)
       .update(updateData)
       .eq('id', bookingId)
       .select()
@@ -226,7 +226,7 @@ export async function DELETE(
       .eq('id', user.id)
       .single();
 
-    if (!profile?.is_admin) {
+    if (!(profile as any)?.is_admin) {
       return NextResponse.json(
         { error: 'Admin access required' },
         { status: 403 }
@@ -234,8 +234,8 @@ export async function DELETE(
     }
 
     // Instead of deleting, cancel the booking
-    const { error } = await supabase
-      .from('bookings')
+    const { error } = await (supabase
+      .from('bookings') as any)
       .update({
         status: 'cancelled',
         cancelled_at: new Date().toISOString(),

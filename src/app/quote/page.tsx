@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/context/LanguageContext'
@@ -177,7 +177,7 @@ const translations = {
   },
 }
 
-export default function QuotePage() {
+function QuotePageContent() {
   const { language } = useLanguage()
   const t = translations[language]
   const searchParams = useSearchParams()
@@ -214,29 +214,47 @@ export default function QuotePage() {
 
   useEffect(() => {
     async function fetchProducts() {
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('products')
-        .select('id, name, slug, base_price')
-        .eq('in_stock', true)
-        .order('base_price', { ascending: true })
+      try {
+        const supabase = createClient()
+        const { data, error } = await (supabase
+          .from('products') as any)
+          .select('id, name, slug, base_price')
+          .eq('in_stock', true)
+          .order('base_price', { ascending: true })
 
-      if (data) {
-        setProducts(data)
+        if (error) {
+          console.error('Error fetching products:', error)
+          setLoading(false)
+          return
+        }
 
-        // Pre-select product if coming from product page
-        if (productSlug) {
-          const product = data.find((p: any) => p.slug === productSlug)
-          if (product) {
-            setFormData(prev => ({ ...prev, productId: product.id }))
+        if (data) {
+          setProducts(data)
+
+          // Pre-select product if coming from product page
+          if (productSlug) {
+            const product = data.find((p: any) => p.slug === productSlug)
+            if (product) {
+              setFormData(prev => ({ ...prev, productId: product.id }))
+            }
           }
         }
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch products:', err)
+        setLoading(false)
       }
-      setLoading(false)
     }
 
     fetchProducts()
   }, [productSlug])
+
+  // Auto-scroll to top when success or error message is shown
+  useEffect(() => {
+    if (submitted || error) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [submitted, error])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -244,39 +262,42 @@ export default function QuotePage() {
     setError(false)
 
     try {
-      const supabase = createClient()
+      // Submit quote request via API (which sends emails)
+      const response = await fetch('/api/enquiries/quote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          businessName: formData.businessName || null,
+          email: formData.email,
+          phone: formData.phone,
+          productId: formData.productId || null,
+          quantity: parseInt(formData.quantity),
+          bodyColor: formData.bodyColor,
+          seatColor: formData.seatColor,
+          liftKit: formData.liftKit,
+          wheelUpgrade: formData.wheelUpgrade,
+          lighting: formData.lighting,
+          batteryType: formData.batteryType,
+          accessories: formData.accessories,
+          primaryUse: formData.primaryUse,
+          budgetRange: formData.budgetRange,
+          purchaseTimeline: formData.purchaseTimeline,
+          specialRequests: formData.specialRequests,
+          hearAboutUs: formData.hearAboutUs,
+        }),
+      })
 
-      // Submit quote request to database
-      const { error: submitError } = await supabase
-        .from('quote_requests')
-        .insert([
-          {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            business_name: formData.businessName || null,
-            email: formData.email,
-            phone: formData.phone,
-            product_id: formData.productId || null,
-            quantity: parseInt(formData.quantity),
-            body_color: formData.bodyColor,
-            seat_color: formData.seatColor,
-            lift_kit: formData.liftKit,
-            wheel_upgrade: formData.wheelUpgrade,
-            lighting: formData.lighting,
-            battery_type: formData.batteryType,
-            accessories: formData.accessories,
-            primary_use: formData.primaryUse,
-            budget_range: formData.budgetRange,
-            purchase_timeline: formData.purchaseTimeline,
-            special_requests: formData.specialRequests,
-            hear_about_us: formData.hearAboutUs,
-            status: 'pending',
-            created_at: new Date().toISOString(),
-          },
-        ])
+      const result = await response.json()
 
-      if (submitError) throw submitError
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to submit quote')
+      }
 
+      console.log('Quote submitted successfully:', result)
       setSubmitted(true)
 
       // Reset form
@@ -800,5 +821,18 @@ export default function QuotePage() {
         </div>
       </section>
     </div>
+  )
+}
+
+// Wrap in Suspense to handle useSearchParams
+export default function QuotePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-zinc-900">Loading...</div>
+      </div>
+    }>
+      <QuotePageContent />
+    </Suspense>
   )
 }

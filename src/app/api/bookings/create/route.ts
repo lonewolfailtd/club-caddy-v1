@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
     const validationResult = bookingSchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: validationResult.error.errors[0].message },
+        { error: 'Invalid booking data', details: validationResult.error.issues },
         { status: 400 }
       );
     }
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     // Check availability first
-    const { data: isAvailable, error: availError } = await supabase.rpc('check_availability', {
+    const { data: isAvailable, error: availError } = await (supabase as any).rpc('check_availability', {
       p_product_id: bookingData.productId,
       p_start_date: bookingData.startDate,
       p_end_date: bookingData.endDate,
@@ -215,8 +215,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create booking
-    const { data: booking, error: bookingError } = await supabase
-      .from('bookings')
+    const { data: booking, error: bookingError } = await (supabase
+      .from('bookings') as any)
       .insert({
         booking_number: bookingNumber,
         user_id: user?.id || null,

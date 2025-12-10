@@ -3,13 +3,13 @@
 import { useLanguage } from '@/context/LanguageContext'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-
-export const metadata = {
-  title: 'Terms of Service | Club Caddy Carts',
-  description: 'Terms and conditions for Club Caddy Carts - Premium electric golf cart sales and hire services in Auckland, New Zealand.',
-}
+import { useEffect } from 'react'
 
 export default function TermsOfServicePage() {
+  // Set page title
+  useEffect(() => {
+    document.title = 'Terms of Service | Club Caddy Carts'
+  }, [])
   const { language } = useLanguage()
 
   const translations = {

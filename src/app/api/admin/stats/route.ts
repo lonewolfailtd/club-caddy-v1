@@ -65,13 +65,13 @@ export async function GET(request: NextRequest) {
 
     if (inventoryError) throw inventoryError;
 
-    // @ts-ignore - Supabase type inference issue with inventory table
+    // Calculate inventory stats with proper typing
     const inventoryStats = inventoryData?.reduce(
-      (acc, inv) => ({
-        total: acc.total + inv.total_quantity,
-        available: acc.available + inv.available_quantity,
-        reserved: acc.reserved + inv.reserved_quantity,
-        maintenance: acc.maintenance + inv.maintenance_quantity,
+      (acc, inv: any) => ({
+        total: acc.total + (inv.total_quantity || 0),
+        available: acc.available + (inv.available_quantity || 0),
+        reserved: acc.reserved + (inv.reserved_quantity || 0),
+        maintenance: acc.maintenance + (inv.maintenance_quantity || 0),
       }),
       { total: 0, available: 0, reserved: 0, maintenance: 0 }
     ) || { total: 0, available: 0, reserved: 0, maintenance: 0 };

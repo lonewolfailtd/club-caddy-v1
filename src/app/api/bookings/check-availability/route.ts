@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json<CheckAvailabilityResponse>(
         {
           available: false,
-          error: validationResult.error.errors[0].message,
+          error: 'Invalid request data',
         },
         { status: 400 }
       );
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     // Call the check_availability database function
-    const { data, error } = await supabase.rpc('check_availability', {
+    const { data, error } = await (supabase as any).rpc('check_availability', {
       p_product_id: productId,
       p_start_date: startDate,
       p_end_date: endDate,

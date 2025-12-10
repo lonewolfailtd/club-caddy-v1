@@ -85,8 +85,8 @@ export default function BookingPage() {
         const supabase = createClient();
 
         // Fetch product
-        const { data: productData, error: productError } = await supabase
-          .from('products')
+        const { data: productData, error: productError } = await (supabase
+          .from('products') as any)
           .select('*')
           .eq('slug', slug)
           .eq('rental_enabled', true)
@@ -100,8 +100,8 @@ export default function BookingPage() {
         setProduct(productData);
 
         // Fetch rental pricing
-        const { data: pricingData, error: pricingError } = await supabase
-          .from('rental_pricing')
+        const { data: pricingData, error: pricingError } = await (supabase
+          .from('rental_pricing') as any)
           .select('*')
           .eq('product_id', productData.id)
           .eq('active', true)

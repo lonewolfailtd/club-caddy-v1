@@ -24,8 +24,11 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
       productId: product.id,
       productSlug: product.slug,
       productName: product.name,
+      name: product.name, // Alias for productName
       productTier: product.tier,
+      tier: product.tier, // Alias for productTier
       basePrice: Number(product.base_price),
+      price: Number(product.base_price), // Alias for basePrice
     })
 
     // Reset button state after animation

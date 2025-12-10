@@ -217,12 +217,13 @@ export const Heading = ({ children }: { children: React.ReactNode }) => (
   </h2>
 )
 
-export const Paragraph = ({ children }: { children: React.ReactNode }) => (
+export const Paragraph = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
   <p style={{
     margin: '0 0 16px',
     fontSize: '15px',
     lineHeight: '24px',
     color: '#52525b',
+    ...style,
   }}>
     {children}
   </p>

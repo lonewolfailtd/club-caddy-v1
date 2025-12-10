@@ -6,8 +6,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient()
 
   // Fetch all products
-  const { data: products } = await supabase
-    .from('products')
+  const { data: products } = await (supabase
+    .from('products') as any)
     .select('slug, updated_at')
     .eq('in_stock', true)
     .order('created_at', { ascending: false })
@@ -65,7 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // Product pages
-  const productPages: MetadataRoute.Sitemap = (products || []).map((product) => ({
+  const productPages: MetadataRoute.Sitemap = (products || []).map((product: any) => ({
     url: `${baseUrl}/products/${product.slug}`,
     lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
     changeFrequency: 'weekly' as const,
@@ -73,13 +73,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // Booking pages for rental-enabled products
-  const { data: rentalProducts } = await supabase
-    .from('products')
+  const { data: rentalProducts } = await (supabase
+    .from('products') as any)
     .select('slug, updated_at')
     .eq('rental_enabled', true)
     .eq('in_stock', true)
 
-  const bookingPages: MetadataRoute.Sitemap = (rentalProducts || []).map((product) => ({
+  const bookingPages: MetadataRoute.Sitemap = (rentalProducts || []).map((product: any) => ({
     url: `${baseUrl}/booking/${product.slug}`,
     lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
     changeFrequency: 'weekly' as const,

@@ -30,7 +30,7 @@ export default function GalleryShowcase({ items }: GalleryShowcaseProps) {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.21, 0.45, 0.27, 0.9]
+        ease: [0.21, 0.45, 0.27, 0.9] as any
       }
     }
   }
