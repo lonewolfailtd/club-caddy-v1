@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe/client';
 import { createClient } from '@supabase/supabase-js';
 import type Stripe from 'stripe';
-// TODO: Implement booking confirmation emails when Stripe is configured
-// import {
-//   sendBookingConfirmationEmail,
-//   sendBookingConfirmationAdminEmail,
-// } from '@/lib/email/send';
+import {
+  sendBookingConfirmationEmail,
+  sendBookingConfirmationAdminEmail,
+} from '@/lib/email/services/email-service';
 import type { BookingWithProduct } from '@/types/booking.types';
 
 // Use service role key for webhook handlers to bypass RLS
@@ -109,33 +108,37 @@ export async function POST(request: NextRequest) {
               // Send confirmation emails to customer and admin
               console.log(`Booking confirmed: ${booking.booking_number}`);
 
-              // TODO: Implement confirmation emails when Stripe is configured
               // Type assertion to match BookingWithProduct interface
-              // const bookingWithProduct = booking as BookingWithProduct;
+              const bookingWithProduct = booking as BookingWithProduct;
 
-              // Send customer confirmation email
-              // const customerEmailResult = await sendBookingConfirmationEmail(bookingWithProduct);
+              try {
+                // Send customer confirmation email
+                const customerEmailResult = await sendBookingConfirmationEmail(bookingWithProduct);
 
-              // Send admin notification email
-              // const adminEmailResult = await sendBookingConfirmationAdminEmail(bookingWithProduct);
+                // Send admin notification email
+                const adminEmailResult = await sendBookingConfirmationAdminEmail(bookingWithProduct);
 
-              // Mark confirmation email as sent if successful
-              // if (customerEmailResult.success) {
-              //   await supabaseAdmin
-              //     .from('bookings')
-              //     .update({ confirmation_email_sent: true })
-              //     .eq('id', bookingId);
+                // Mark confirmation email as sent if successful
+                if (customerEmailResult.success) {
+                  await supabaseAdmin
+                    .from('bookings')
+                    .update({ confirmation_email_sent: true })
+                    .eq('id', bookingId);
 
-              //   console.log(`Confirmation email sent successfully to ${booking.customer_email}`);
-              // } else {
-              //   console.error('Failed to send customer confirmation email:', customerEmailResult.error);
-              // }
+                  console.log(`Confirmation email sent successfully to ${booking.customer_email}`);
+                } else {
+                  console.error('Failed to send customer confirmation email:', customerEmailResult.error);
+                }
 
-              // if (adminEmailResult.success) {
-              //   console.log('Admin notification email sent successfully');
-              // } else {
-              //   console.error('Failed to send admin notification email:', adminEmailResult.error);
-              // }
+                if (adminEmailResult.success) {
+                  console.log('Admin notification email sent successfully');
+                } else {
+                  console.error('Failed to send admin notification email:', adminEmailResult.error);
+                }
+              } catch (emailError) {
+                console.error('Error sending booking confirmation emails:', emailError);
+                // Don't fail the webhook if email sending fails
+              }
             }
           }
         }

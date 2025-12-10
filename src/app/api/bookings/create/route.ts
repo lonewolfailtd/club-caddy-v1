@@ -195,7 +195,8 @@ export async function POST(request: NextRequest) {
 
     // Calculate totals
     const subtotal = baseRate + addonTotal;
-    const taxAmount = 0; // TODO: Implement tax calculation based on NZ GST (15%)
+    // NZ GST is 15% on all rental services
+    const taxAmount = Math.round(subtotal * 0.15 * 100) / 100; // Round to 2 decimal places
     const totalAmount = subtotal + taxAmount;
 
     // Get authenticated user if logged in

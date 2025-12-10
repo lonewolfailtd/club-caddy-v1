@@ -18,6 +18,10 @@ import {
   RefundProcessedEmail,
   ContactFormEmail,
   NewsletterWelcomeEmail,
+  BookingConfirmationCustomerEmail,
+  BookingConfirmationAdminEmail,
+  BookingReminderEmail,
+  BookingThankYouEmail,
 } from '../templates'
 
 const ADMIN_EMAIL = 'admin@clubcaddycarts.com'
@@ -180,5 +184,41 @@ export async function sendNewsletterWelcome(to: string, welcomeData: any) {
     to,
     subject: 'Welcome to Club Caddy Carts Newsletter!',
     react: React.createElement(NewsletterWelcomeEmail, welcomeData),
+  })
+}
+
+// ============================================
+// BOOKING EMAILS
+// ============================================
+
+export async function sendBookingConfirmationEmail(bookingData: any) {
+  return sendEmail({
+    to: bookingData.customer_email,
+    subject: `Booking Confirmed #${bookingData.booking_number} - Club Caddy Carts`,
+    react: React.createElement(BookingConfirmationCustomerEmail, bookingData),
+  })
+}
+
+export async function sendBookingConfirmationAdminEmail(bookingData: any) {
+  return sendEmail({
+    to: ADMIN_EMAIL,
+    subject: `New Booking #${bookingData.booking_number} - Action Required`,
+    react: React.createElement(BookingConfirmationAdminEmail, bookingData),
+  })
+}
+
+export async function sendBookingReminder(bookingData: any) {
+  return sendEmail({
+    to: bookingData.customer_email,
+    subject: `Reminder: Your Rental Starts Tomorrow - Booking #${bookingData.booking_number}`,
+    react: React.createElement(BookingReminderEmail, bookingData),
+  })
+}
+
+export async function sendBookingThankYou(bookingData: any) {
+  return sendEmail({
+    to: bookingData.customer_email,
+    subject: `Thank You for Choosing Club Caddy Carts! - Booking #${bookingData.booking_number}`,
+    react: React.createElement(BookingThankYouEmail, bookingData),
   })
 }

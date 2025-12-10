@@ -24,3 +24,9 @@ export { RefundProcessedEmail } from './refunds/refund-processed'
 // General Templates
 export { ContactFormEmail } from './general/contact-form'
 export { NewsletterWelcomeEmail } from './general/newsletter-welcome'
+
+// Booking Templates
+export { BookingConfirmationCustomerEmail } from './bookings/booking-confirmation-customer'
+export { BookingConfirmationAdminEmail } from './bookings/booking-confirmation-admin'
+export { BookingReminderEmail } from './bookings/booking-reminder'
+export { BookingThankYouEmail } from './bookings/booking-thank-you'
