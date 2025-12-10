@@ -44,6 +44,7 @@ test-results/
 # Misc
 *.log
 .cache
-# Large video files
-public/videos/*.mp4
-*.mp4
+
+# Large video files (exclude backups and originals)
+public/videos/*-original.mp4
+public/videos/*-backup.mp4
