@@ -29,7 +29,7 @@ INSERT INTO products (
   'Classic Caddy',
   'classic-caddy',
   'standard',
-  'golf-cart',
+  'golf_cart',
   11500.00,
   'The Classic Caddy represents the perfect entry point into premium electric golf cart ownership. Built with quality components and powered by advanced 72V lithium technology, this cart delivers exceptional performance for golf courses, estates, and community use.
 
@@ -102,7 +102,7 @@ INSERT INTO products (
   'Elite Caddy',
   'elite-caddy',
   'premium',
-  'golf-cart',
+  'golf_cart',
   14000.00,
   'The Elite Caddy elevates your golf cart experience with premium features and enhanced technology. Building on the solid foundation of our Classic model, the Elite adds sophisticated amenities that make every journey more comfortable and enjoyable.
 
@@ -181,7 +181,7 @@ INSERT INTO products (
   'Prestige Caddy',
   'prestige-caddy',
   'ultimate',
-  'golf-cart',
+  'golf_cart',
   16500.00,
   'The Prestige Caddy represents the pinnacle of electric golf cart luxury and performance. This flagship model combines cutting-edge technology, premium materials, and exceptional craftsmanship to deliver an unparalleled driving experience.
 
