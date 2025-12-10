@@ -9,7 +9,7 @@
 
 ## Step 2: Run the Seed Script
 
-1. Open `scripts/seed-products.sql`
+1. Open `scripts/seed-products-fixed.sql` (use this, not seed-products.sql)
 2. Copy the entire contents
 3. Paste into Supabase SQL Editor
 4. Click **Run** button (or press Ctrl+Enter)
