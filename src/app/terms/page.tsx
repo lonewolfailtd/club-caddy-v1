@@ -1,775 +1,998 @@
-'use client';
+'use client'
 
-import { useLanguage } from '@/context/LanguageContext';
-import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext'
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
+
+export const metadata = {
+  title: 'Terms of Service | Club Caddy Carts',
+  description: 'Terms and conditions for Club Caddy Carts - Premium electric golf cart sales and hire services in Auckland, New Zealand.',
+}
 
 export default function TermsOfServicePage() {
-  const { language } = useLanguage();
+  const { language } = useLanguage()
+
+  const translations = {
+    en: {
+      title: 'Terms of Service',
+      lastUpdated: 'Last Updated: December 10, 2025',
+      backHome: 'Back to Home',
+    },
+    zh: {
+      title: '服务条款',
+      lastUpdated: '最后更新：2025年12月10日',
+      backHome: '返回首页',
+    },
+  }
+
+  const t = translations[language]
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-gradient-to-br from-rose-50 to-white border-b border-zinc-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <header className="border-b border-zinc-200">
+        <div className="container mx-auto px-4 py-6">
           <Link
             href="/"
-            className="inline-flex items-center text-rose-800 hover:text-rose-900 mb-4 transition-colors"
+            className="inline-flex items-center gap-2 text-rose-800 hover:text-rose-900 transition-colors refined-body font-medium"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            {language === 'en' ? 'Back to Home' : '返回首页'}
+            <ArrowLeft className="w-4 h-4" />
+            {t.backHome}
           </Link>
-          <h1 className="refined-title text-4xl md:text-5xl text-zinc-900 mb-2">
-            {language === 'en' ? 'Terms of Service' : '服务条款'}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12 max-w-4xl">
+        {/* Title Section */}
+        <div className="mb-12 text-center">
+          <h1 className="refined-title text-4xl md:text-5xl font-bold text-rose-800 mb-4">
+            {t.title}
           </h1>
-          <p className="text-lg text-zinc-600">
-            Club Caddy Carts Limited
+          <p className="refined-body text-zinc-600 text-lg">
+            Club Caddy Carts
           </p>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Last Updated */}
-        <div className="mb-8 p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
-          <p className="refined-body text-sm text-zinc-700">
-            <span className="font-semibold">Effective Date:</span> 9 December 2025
-          </p>
-          <p className="refined-body text-sm text-zinc-700">
-            <span className="font-semibold">Last Updated:</span> 9 December 2025
+          <p className="refined-body text-zinc-500 mt-2">
+            {t.lastUpdated}
           </p>
         </div>
 
-        <div className="prose prose-zinc max-w-none">
-          {/* Section 1 */}
+        {/* Content */}
+        <div className="refined-body prose prose-zinc max-w-none">
+          {/* Introduction */}
           <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              1. Introduction and Acceptance of Terms
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              1. Introduction and Agreement
             </h2>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">1.1 Agreement to Terms</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Welcome to Club Caddy Carts ("we," "us," "our," or "Company"). These Terms of Service ("Terms") constitute a legally binding agreement between you ("you," "your," or "Customer") and Club Caddy Carts Limited, a company operating in Auckland, New Zealand.
+            <p className="text-zinc-700 leading-relaxed mb-4">
+              Welcome to Club Caddy Carts. These Terms of Service ("Terms") constitute a legally binding agreement between you ("Customer," "you," or "your") and Club Caddy Carts ("we," "us," "our," or "Company"), a New Zealand-based business specializing in the sales and hire of premium electric golf carts.
             </p>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              By accessing, browsing, or using our website at clubcaddycarts.com ("Website"), or by purchasing, hiring, or using any of our products or services, you acknowledge that you have read, understood, and agree to be bound by these Terms and all applicable laws and regulations.
+            <p className="text-zinc-700 leading-relaxed mb-4">
+              By accessing our website (clubcaddycarts.com), purchasing our products, hiring our equipment, or using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and our <Link href="/privacy" className="text-rose-800 underline hover:text-rose-900">Privacy Policy</Link>.
             </p>
 
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">1.2 Capacity to Contract</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              By agreeing to these Terms, you represent and warrant that:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">You are at least 18 years of age</li>
-              <li className="refined-body text-zinc-700">You have the legal capacity to enter into a binding contract</li>
-              <li className="refined-body text-zinc-700">You are not prohibited by law from accessing or using our services</li>
-              <li className="refined-body text-zinc-700">All information you provide is accurate, current, and complete</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">1.3 Electronic Acceptance</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              In accordance with the Contract and Commercial Law Act 2017, you accept these Terms by:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Clicking "I Accept" or similar acceptance mechanism</li>
-              <li className="refined-body text-zinc-700">Completing a purchase or hire transaction</li>
-              <li className="refined-body text-zinc-700">Creating an account on our Website</li>
-              <li className="refined-body text-zinc-700">Using our Website or services in any manner</li>
-            </ul>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Your electronic acceptance creates a valid and enforceable contract under New Zealand law.
-            </p>
-          </section>
-
-          {/* Section 2 */}
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              2. Definitions
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              For the purposes of these Terms:
-            </p>
-            <div className="space-y-4">
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Business Use"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means use of products or services acquired for the purpose of a business, trade, or profession.
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"CGA"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means the Consumer Guarantees Act 1993 (New Zealand).
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Consumer"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means a person who acquires goods or services for personal, domestic, or household use and not for business purposes.
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Content"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means all text, images, graphics, logos, videos, software, data, and other materials available on the Website.
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"FTA"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means the Fair Trading Act 1986 (New Zealand).
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Goods"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means the electric golf carts and related products offered for sale or hire through our Website.
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"GST"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means Goods and Services Tax as defined under the Goods and Services Tax Act 1985 (New Zealand).
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Hire Agreement"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means a separate rental or hire contract for temporary use of our Goods.
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Intellectual Property"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means all patents, trademarks, service marks, trade names, copyrights, trade secrets, and other intellectual property rights.
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Order"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means your request to purchase or hire Goods through our Website.
-                </p>
-              </div>
-              <div>
-                <p className="refined-body text-zinc-900 font-semibold mb-1">"Services"</p>
-                <p className="refined-body text-zinc-700 leading-relaxed">
-                  means delivery, maintenance, support, and other services we provide.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 3 */}
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              3. Use of Website
-            </h2>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">3.1 License to Use</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Subject to these Terms, we grant you a limited, non-exclusive, non-transferable, revocable license to access and use our Website for its intended purpose of browsing and purchasing or hiring our products.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">3.2 Prohibited Uses</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              You agree not to:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Use the Website for any unlawful purpose or in violation of these Terms</li>
-              <li className="refined-body text-zinc-700">Attempt to gain unauthorized access to any portion of the Website or systems</li>
-              <li className="refined-body text-zinc-700">Use any automated system (including robots, spiders, or scrapers) to access the Website</li>
-              <li className="refined-body text-zinc-700">Interfere with or disrupt the Website or servers</li>
-              <li className="refined-body text-zinc-700">Transmit viruses, malware, or other harmful code</li>
-              <li className="refined-body text-zinc-700">Impersonate any person or entity or misrepresent your affiliation</li>
-              <li className="refined-body text-zinc-700">Collect or harvest personal information of other users</li>
-              <li className="refined-body text-zinc-700">Use the Website to transmit unsolicited commercial communications</li>
-              <li className="refined-body text-zinc-700">Reproduce, duplicate, copy, sell, or exploit any portion of the Website without express written permission</li>
-              <li className="refined-body text-zinc-700">Reverse engineer or attempt to extract source code from our Website</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">3.3 Account Security</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              If you create an account on our Website, you are responsible for:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Maintaining the confidentiality of your account credentials</li>
-              <li className="refined-body text-zinc-700">All activities that occur under your account</li>
-              <li className="refined-body text-zinc-700">Notifying us immediately of any unauthorized access or security breach</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">3.4 Suspension and Termination</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              We reserve the right to suspend or terminate your access to the Website at our sole discretion, without notice, for conduct that we believe:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Violates these Terms or applicable law</li>
-              <li className="refined-body text-zinc-700">Is harmful to other users, us, or third parties</li>
-              <li className="refined-body text-zinc-700">Subjects us to liability</li>
-              <li className="refined-body text-zinc-700">Is fraudulent or involves the sale of counterfeit or stolen items</li>
-            </ul>
-          </section>
-
-          {/* Section 4 */}
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              4. Products and Services
-            </h2>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">4.1 Product Descriptions</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              We offer premium 72V lithium electric golf carts in various configurations (2-20 seater models) for sale and hire. We make every effort to provide accurate product descriptions, specifications, and images. However:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Images are for illustrative purposes and actual products may vary slightly in appearance</li>
-              <li className="refined-body text-zinc-700">Specifications are subject to manufacturer changes</li>
-              <li className="refined-body text-zinc-700">Colours displayed may vary depending on your monitor settings</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">4.2 Product Availability</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              All products are subject to availability. We reserve the right to:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Limit quantities of products available for purchase or hire</li>
-              <li className="refined-body text-zinc-700">Discontinue any product at any time</li>
-              <li className="refined-body text-zinc-700">Refuse any order at our sole discretion</li>
-            </ul>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              If a product becomes unavailable after you place an order, we will notify you promptly and offer a full refund or suitable alternative.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">4.3 Business Location and Services</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              We operate from Auckland, New Zealand, and provide:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700"><span className="font-semibold">Sales:</span> Permanent purchase of electric golf carts</li>
-              <li className="refined-body text-zinc-700"><span className="font-semibold">Hire/Rental:</span> Temporary hire arrangements under separate Hire Agreements</li>
-              <li className="refined-body text-zinc-700"><span className="font-semibold">Delivery:</span> Nationwide delivery across New Zealand (additional terms apply)</li>
-              <li className="refined-body text-zinc-700"><span className="font-semibold">Support:</span> Customer service, maintenance, and technical support</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">4.4 Accuracy of Information</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              While we strive to ensure all information on our Website is accurate and current, we do not warrant that:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Product descriptions or other content are error-free</li>
-              <li className="refined-body text-zinc-700">The Website will be uninterrupted or error-free</li>
-              <li className="refined-body text-zinc-700">Defects will be corrected</li>
-              <li className="refined-body text-zinc-700">The Website or servers are free of viruses or harmful components</li>
-            </ul>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              In accordance with the Fair Trading Act 1986, we do not engage in misleading or deceptive conduct. Any errors or omissions will be corrected promptly upon discovery.
-            </p>
-          </section>
-
-          {/* Section 5 */}
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              5. Pricing and Payment Terms
-            </h2>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">5.1 Pricing</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              All prices displayed on our Website are:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">In New Zealand Dollars (NZD)</li>
-              <li className="refined-body text-zinc-700"><span className="font-semibold">Inclusive of GST</span> (15%) unless otherwise stated</li>
-              <li className="refined-body text-zinc-700">Subject to change without notice</li>
-              <li className="refined-body text-zinc-700">Valid at the time of order placement</li>
-            </ul>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              The price charged will be the price displayed at the time you complete your order, subject to availability.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">5.2 GST Compliance</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              In compliance with the Fair Trading Act 1986 and the Goods and Services Tax Act 1985:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">All advertised prices include GST</li>
-              <li className="refined-body text-zinc-700">Tax invoices will be provided for all transactions</li>
-              <li className="refined-body text-zinc-700">GST will be separately itemized on all invoices</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">5.3 Payment Methods</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              We accept the following payment methods:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Credit cards (Visa, Mastercard, American Express)</li>
-              <li className="refined-body text-zinc-700">Debit cards</li>
-              <li className="refined-body text-zinc-700">Bank transfers</li>
-              <li className="refined-body text-zinc-700">Approved financing options (subject to credit approval)</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">5.4 Payment Terms</h3>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Payment is due in full at the time of order unless otherwise arranged</li>
-              <li className="refined-body text-zinc-700">For bank transfers, orders will not be processed until payment is received in full</li>
-              <li className="refined-body text-zinc-700">For financed purchases, separate financing terms apply</li>
-              <li className="refined-body text-zinc-700">We reserve the right to cancel orders if payment is not received</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">5.5 Payment Security</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              All payment processing is conducted through secure, encrypted connections. We do not store complete credit card information on our servers. Payment information is processed by our third-party payment processors in compliance with PCI DSS standards.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">5.6 Price Errors</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              Despite our best efforts, products may occasionally be listed at incorrect prices due to human error or technical issues. If we discover a pricing error:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">We will notify you as soon as possible</li>
-              <li className="refined-body text-zinc-700">We offer you the option to purchase at the correct price or cancel your order</li>
-              <li className="refined-body text-zinc-700">If you have already paid, we will refund the difference or cancel and refund in full at your choice</li>
-            </ul>
-          </section>
-
-          {/* Section 6 */}
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              6. Delivery and Shipping
-            </h2>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">6.1 Delivery Area</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              We deliver throughout New Zealand. Delivery charges vary based on:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Delivery location</li>
-              <li className="refined-body text-zinc-700">Product size and weight</li>
-              <li className="refined-body text-zinc-700">Delivery timeframe selected</li>
-            </ul>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Specific delivery costs will be calculated and displayed before you complete your order.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">6.2 Delivery Timeframes</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              We aim to deliver within the timeframes specified at the time of order. However:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Delivery times are estimates only and not guaranteed</li>
-              <li className="refined-body text-zinc-700">Delays may occur due to factors beyond our control</li>
-              <li className="refined-body text-zinc-700">We will notify you of any significant delays</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">6.3 Delivery Process</h3>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">You will be contacted to arrange a suitable delivery date and time</li>
-              <li className="refined-body text-zinc-700">Someone must be present to receive delivery and inspect the goods</li>
-              <li className="refined-body text-zinc-700">You will be required to sign for receipt of the goods</li>
-              <li className="refined-body text-zinc-700">Risk of loss or damage passes to you upon delivery</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">6.4 Failed Delivery</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              If delivery cannot be completed due to:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">No one being present at the delivery address</li>
-              <li className="refined-body text-zinc-700">Incorrect or incomplete delivery information provided by you</li>
-              <li className="refined-body text-zinc-700">Refusal to accept delivery</li>
-            </ul>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              You may be charged additional delivery fees for redelivery attempts.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">6.5 Inspection Upon Delivery</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              You must inspect the goods upon delivery and notify the delivery driver immediately of any:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Visible damage</li>
-              <li className="refined-body text-zinc-700">Missing items</li>
-              <li className="refined-body text-zinc-700">Incorrect products</li>
-            </ul>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Failure to report issues at the time of delivery may affect your rights to claim for transit damage.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">6.6 Title and Risk</h3>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Title to the goods passes to you upon full payment</li>
-              <li className="refined-body text-zinc-700">Risk of loss or damage passes to you upon delivery</li>
-              <li className="refined-body text-zinc-700">Until title passes, you must not sell, dispose of, or encumber the goods</li>
-            </ul>
-          </section>
-
-          {/* Section 7 */}
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              7. Consumer Guarantees
-            </h2>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">7.1 Application of Consumer Guarantees Act</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              If you are acquiring goods or services as a <span className="font-semibold">Consumer</span> (for personal, domestic, or household use), the Consumer Guarantees Act 1993 applies to your purchase and <span className="font-semibold">cannot be excluded</span>.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">7.2 Guarantees Under the CGA</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              Under the Consumer Guarantees Act, all goods and services supplied by us come with guarantees that:
-            </p>
-            <div className="mb-4">
-              <p className="refined-body text-zinc-900 font-semibold mb-2">For Goods:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li className="refined-body text-zinc-700">Are of acceptable quality</li>
-                <li className="refined-body text-zinc-700">Are fit for any particular purpose you made known to us</li>
-                <li className="refined-body text-zinc-700">Match the description we provided</li>
-                <li className="refined-body text-zinc-700">Match any sample or demonstration model</li>
-                <li className="refined-body text-zinc-700">Have spare parts and repair facilities reasonably available</li>
-                <li className="refined-body text-zinc-700">Come with clear title and free from undisclosed securities</li>
-                <li className="refined-body text-zinc-700">Do not infringe intellectual property rights</li>
-              </ul>
-            </div>
-            <div className="mb-4">
-              <p className="refined-body text-zinc-900 font-semibold mb-2">For Services:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li className="refined-body text-zinc-700">Are carried out with reasonable care and skill</li>
-                <li className="refined-body text-zinc-700">Are fit for any particular purpose you made known to us</li>
-                <li className="refined-body text-zinc-700">Are completed within a reasonable time (if no time specified)</li>
+            <div className="bg-zinc-50 border-l-4 border-rose-800 p-6 my-6">
+              <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">Our Contact Details:</h3>
+              <ul className="space-y-2 text-zinc-700">
+                <li><strong>Business Name:</strong> Club Caddy Carts</li>
+                <li><strong>Location:</strong> Auckland, New Zealand</li>
+                <li><strong>Website:</strong> clubcaddycarts.com</li>
+                <li><strong>Email:</strong> admin@clubcaddycarts.com</li>
+                <li><strong>Phone:</strong> +64 021 560 307</li>
               </ul>
             </div>
 
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">7.3 Remedies for Breach of Guarantees</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              If there is a failure to comply with a guarantee under the CGA, you are entitled to remedies which may include:
-            </p>
-            <div className="mb-4">
-              <p className="refined-body text-zinc-900 font-semibold mb-2">For Minor Failures:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li className="refined-body text-zinc-700">Repair of the goods</li>
-                <li className="refined-body text-zinc-700">Replacement of the goods (at our option)</li>
-              </ul>
-            </div>
-            <div className="mb-4">
-              <p className="refined-body text-zinc-900 font-semibold mb-2">For Major Failures:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li className="refined-body text-zinc-700">Rejection of goods and refund of the purchase price</li>
-                <li className="refined-body text-zinc-700">Rejection of goods and replacement with goods of the same type</li>
-                <li className="refined-body text-zinc-700">Compensation for reduction in value below the price paid</li>
-              </ul>
-            </div>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              A failure is <span className="font-semibold">major</span> if:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">The goods would not have been acquired by a reasonable consumer fully aware of the nature and extent of the failure</li>
-              <li className="refined-body text-zinc-700">The goods depart substantially from the description or sample</li>
-              <li className="refined-body text-zinc-700">The goods are substantially unfit for their common purpose and cannot easily be remedied within a reasonable time</li>
-              <li className="refined-body text-zinc-700">The goods are unsafe</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">7.4 Timeframes for Claims</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              You should notify us as soon as practicable after discovering a fault. The CGA guarantees apply for a reasonable time, which depends on factors including the nature and price of the goods, the use to which the goods have been put, and the length of time between purchase and failure. For major purchases such as electric golf carts, this reasonable time is typically several years.
+            <p className="text-zinc-700 leading-relaxed mb-4">
+              <strong>Important:</strong> If you do not agree with these Terms, you must not use our website or services. Your continued use of our services after any modifications to these Terms constitutes acceptance of those changes.
             </p>
 
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">7.5 Business Use Exclusion</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              If you are acquiring goods or services for <span className="font-semibold">Business Use</span>, you may agree to exclude, restrict, or modify the Consumer Guarantees Act by providing written notice to us before purchase. In such cases, your remedies will be governed by any applicable warranty terms and general contract law.
-            </p>
-          </section>
-
-          {/* Section 8 */}
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              8. Returns, Refunds, and Cancellations
-            </h2>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">8.1 Consumer Purchases</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              For Consumer purchases, your rights to returns and refunds are governed by the Consumer Guarantees Act as described in Section 7.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">8.2 Change of Mind Returns</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              We are not obligated to accept returns or provide refunds for change of mind. However, we may, at our sole discretion, accept returns in certain circumstances:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">The product must be in original, unused condition</li>
-              <li className="refined-body text-zinc-700">All packaging and accessories must be included</li>
-              <li className="refined-body text-zinc-700">Returns must be requested within 7 days of delivery</li>
-              <li className="refined-body text-zinc-700">A restocking fee may apply</li>
-              <li className="refined-body text-zinc-700">You are responsible for return shipping costs</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">8.3 Cancellation Before Delivery</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              You may cancel an order before dispatch by contacting us. If we have already processed your payment:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">We will provide a full refund if the goods have not been dispatched</li>
-              <li className="refined-body text-zinc-700">If goods have been dispatched but not delivered, you may refuse delivery and we will refund upon receipt of returned goods (less any delivery costs incurred)</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">8.4 Cancellation for Custom Orders</h3>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Orders for customized or specially configured products may not be cancelled once production has commenced. Any deposits paid are non-refundable for custom orders.
-            </p>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">8.5 Refund Processing</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              Approved refunds will be processed:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">To the original payment method</li>
-              <li className="refined-body text-zinc-700">Within 10 business days of approval</li>
-              <li className="refined-body text-zinc-700">Less any applicable fees or costs</li>
-            </ul>
-
-            <h3 className="refined-title text-xl text-zinc-800 mb-3 mt-6">8.6 Warranty Returns</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              For warranty claims under the CGA or manufacturer warranty:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Contact us immediately upon discovering the fault</li>
-              <li className="refined-body text-zinc-700">Provide proof of purchase and details of the fault</li>
-              <li className="refined-body text-zinc-700">We will assess the claim and determine the appropriate remedy</li>
-              <li className="refined-body text-zinc-700">We will cover reasonable costs of return for valid warranty claims</li>
-            </ul>
-          </section>
-
-          {/* Continue with remaining sections... */}
-          {/* For brevity, I'll include a summary note for the remaining sections */}
-
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              9. Hire and Rental Terms
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Hire or rental of our products is governed by a separate Hire Agreement which you must sign before taking possession of hired goods. These Terms supplement the Hire Agreement. For complete details on hire periods, charges, security deposits, hirer responsibilities, insurance requirements, and early termination conditions, please refer to the full Terms of Service document or contact us directly.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              10. Intellectual Property Rights
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              All Content on our Website, including text, graphics, logos, images, videos, software, trademarks ("Club Caddy Carts" and associated marks), product designs, and website layout is owned by or licensed to Club Caddy Carts and is protected by New Zealand and international intellectual property laws. You are granted a limited license to view Content for personal, non-commercial use only.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              11. Limitation of Liability
-            </h2>
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mb-4">
-              <p className="refined-body text-zinc-900 font-semibold mb-2">Important:</p>
-              <p className="refined-body text-zinc-700 leading-relaxed">
-                If you are a Consumer under the Consumer Guarantees Act 1993, nothing in this Section limits or excludes the guarantees or remedies you have under the CGA, Fair Trading Act 1986, or other consumer protection legislation.
+            <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mt-4">
+              <p className="text-zinc-700">
+                <strong>Legal Compliance:</strong> These Terms comply with the New Zealand Consumer Guarantees Act 1993, Fair Trading Act 1986, and other applicable New Zealand consumer protection legislation. Nothing in these Terms limits or excludes any statutory rights you may have under New Zealand law.
               </p>
             </div>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              For Business Use or where the CGA does not apply, we exclude liability for indirect, incidental, special, or consequential damages, and our total liability is limited to the cost of replacing the goods or supplying the services again, not exceeding the amount you paid.
-            </p>
           </section>
 
+          {/* Services We Provide */}
           <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              12. Indemnification
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              2. Services We Provide
             </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              You agree to indemnify, defend, and hold harmless Club Caddy Carts, its directors, officers, employees, agents, and affiliates from any claims, liabilities, damages, losses, costs, or expenses arising from your breach of these Terms, violation of any law or third-party rights, use or misuse of our products or services, negligence, or willful misconduct.
+            <p className="text-zinc-700 leading-relaxed mb-6">
+              Club Caddy Carts offers two primary services:
             </p>
-          </section>
 
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              13. Dispute Resolution
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Before commencing formal proceedings, parties agree to attempt resolution through good faith negotiation and mediation. For disputes within jurisdiction limits, you may file with the Disputes Tribunal. Nothing prevents you from seeking remedies under the Consumer Guarantees Act or Fair Trading Act, or making complaints to Commerce Commission New Zealand.
-            </p>
-          </section>
+            <div className="space-y-6">
+              <div className="bg-zinc-50 p-6 rounded-lg">
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">2.1 Sales of Electric Golf Carts</h3>
+                <p className="text-zinc-700 mb-3">We sell premium electric golf carts featuring:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Advanced 72V lithium battery technology</li>
+                  <li>Superior range and performance</li>
+                  <li>Various models and configurations</li>
+                  <li>Premium customization options</li>
+                  <li>Comprehensive warranty coverage (detailed in Section 6)</li>
+                </ul>
+                <p className="text-zinc-700 mt-4">
+                  <strong>Pricing:</strong> All prices are displayed in New Zealand Dollars (NZD) and include GST unless otherwise stated.
+                </p>
+              </div>
 
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              14. Governing Law and Jurisdiction
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              These Terms are governed by the laws of New Zealand, including the Contract and Commercial Law Act 2017, Consumer Guarantees Act 1993, Fair Trading Act 1986, Goods and Services Tax Act 1985, Privacy Act 2020, and Electronic Transactions Act 2002. Parties submit to the exclusive jurisdiction of New Zealand courts. Our principal place of business is Auckland, New Zealand.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              15. Privacy and Data Protection
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              Our collection, use, and disclosure of personal information is governed by our Privacy Policy, which complies with the Privacy Act 2020. We collect information necessary to process orders, provide customer service, fulfill legal obligations, and send marketing communications (with consent). You have rights to access, correct, delete, and opt-out of marketing communications.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              16. Modification of Terms
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              We reserve the right to modify these Terms at any time. Changes will be effective when posted with an updated "Last Updated" date. Your continued use after changes constitutes acceptance. Changes do not affect orders placed before the effective date.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              17. General Provisions
-            </h2>
-            <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-              These Terms constitute the entire agreement between you and Club Caddy Carts. Invalid provisions will be modified to minimum extent necessary. No waiver of any right constitutes a waiver of future rights. You may not assign these Terms without our consent. Nothing creates a partnership or agency relationship.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              18. Consumer Protection Notice
-            </h2>
-            <div className="bg-rose-50 border-l-4 border-rose-800 p-6 mb-4">
-              <h3 className="refined-title text-lg text-zinc-900 mb-3">Your Rights Under New Zealand Law</h3>
-              <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-                As a consumer in New Zealand, you have strong protections under the law:
-              </p>
-              <ul className="space-y-3">
-                <li>
-                  <p className="refined-body text-zinc-900 font-semibold">Consumer Guarantees Act 1993:</p>
-                  <p className="refined-body text-zinc-700">Provides automatic guarantees for goods and services purchased for personal use. These guarantees cannot be excluded or modified for consumer purchases.</p>
-                </li>
-                <li>
-                  <p className="refined-body text-zinc-900 font-semibold">Fair Trading Act 1986:</p>
-                  <p className="refined-body text-zinc-700">Prohibits misleading and deceptive conduct, false representations, and unfair contract terms. We are committed to honest and fair trading practices.</p>
-                </li>
-                <li>
-                  <p className="refined-body text-zinc-900 font-semibold">Privacy Act 2020:</p>
-                  <p className="refined-body text-zinc-700">Protects your personal information and gives you rights to access and correct your data.</p>
-                </li>
-              </ul>
+              <div className="bg-zinc-50 p-6 rounded-lg">
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">2.2 Hire/Rental Services</h3>
+                <p className="text-zinc-700 mb-3">We offer flexible hire options for:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Golf events and tournaments</li>
+                  <li>Corporate events and functions</li>
+                  <li>Private events and occasions</li>
+                  <li>Short-term and long-term rentals</li>
+                  <li>Commercial and residential use</li>
+                </ul>
+                <p className="text-zinc-700 mt-4">
+                  <strong>Hire Terms:</strong> Specific hire agreements will be provided for each rental, detailing duration, rates, insurance requirements, and conditions of use.
+                </p>
+              </div>
             </div>
+          </section>
 
-            <h3 className="refined-title text-lg text-zinc-900 mb-3 mt-6">How to Exercise Your Rights</h3>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Product quality or service delivery: Contact us at admin@clubcaddycarts.com</li>
-              <li className="refined-body text-zinc-700">Misleading conduct or unfair trading: Contact the Commerce Commission at www.comcom.govt.nz</li>
-              <li className="refined-body text-zinc-700">Privacy issues: Contact the Privacy Commissioner at www.privacy.org.nz</li>
-              <li className="refined-body text-zinc-700">Disputes: Use the Disputes Tribunal for claims up to $30,000 (consumers)</li>
-            </ul>
+          {/* Eligibility and Account Requirements */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              3. Eligibility and Account Requirements
+            </h2>
 
-            <h3 className="refined-title text-lg text-zinc-900 mb-3 mt-6">Our Commitment</h3>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">We are committed to:</p>
-            <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li className="refined-body text-zinc-700">Honest and transparent business practices</li>
-              <li className="refined-body text-zinc-700">Providing accurate product information</li>
-              <li className="refined-body text-zinc-700">Honoring your rights under New Zealand consumer law</li>
-              <li className="refined-body text-zinc-700">Resolving disputes fairly and promptly</li>
-              <li className="refined-body text-zinc-700">Protecting your personal information</li>
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">3.1 Age Requirements</h3>
+                <p className="text-zinc-700 mb-3">To purchase or hire from Club Caddy Carts, you must:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Be at least 18 years of age or the age of majority in your jurisdiction</li>
+                  <li>Have legal capacity to enter into a binding contract</li>
+                  <li>Provide accurate and truthful information</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">3.2 Account Creation</h3>
+                <p className="text-zinc-700 mb-3">When creating an account, you agree to:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Provide accurate, current, and complete information</li>
+                  <li>Maintain and promptly update your account information</li>
+                  <li>Maintain the security of your password and account</li>
+                  <li>Accept responsibility for all activities under your account</li>
+                  <li>Notify us immediately of any unauthorized use</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">3.3 Business Accounts</h3>
+                <p className="text-zinc-700">
+                  For business purchases, you represent and warrant that you have the authority to bind the business entity to these Terms and that the business has the legal capacity to enter into this agreement.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Orders and Purchases */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              4. Orders and Purchases
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">4.1 Order Process</h3>
+                <p className="text-zinc-700 mb-3">When you place an order:</p>
+                <ol className="list-decimal pl-6 space-y-2 text-zinc-700">
+                  <li>You submit an offer to purchase the selected products at the stated price</li>
+                  <li>We send an order confirmation email acknowledging receipt of your order</li>
+                  <li>A binding contract forms when we accept your order (typically upon payment confirmation or shipment)</li>
+                  <li>We reserve the right to refuse or cancel any order at our discretion</li>
+                </ol>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">4.2 Pricing</h3>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700 mb-4">
+                  <li><strong>Currency:</strong> All prices are in New Zealand Dollars (NZD)</li>
+                  <li><strong>GST:</strong> Prices include 15% GST unless otherwise stated</li>
+                  <li><strong>Accuracy:</strong> We strive for accuracy but errors may occur; we reserve the right to correct pricing errors</li>
+                  <li><strong>Changes:</strong> Prices may change without notice; orders are charged at the price displayed at time of purchase</li>
+                </ul>
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
+                  <p className="text-zinc-700">
+                    <strong>Price Error Policy:</strong> If we discover a pricing error after you've placed an order, we will contact you and offer the option to proceed at the correct price or cancel the order for a full refund.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">4.3 Payment Methods</h3>
+                <p className="text-zinc-700 mb-3">We accept the following payment methods:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Credit cards (Visa, Mastercard, American Express)</li>
+                  <li>Debit cards</li>
+                  <li>Bank transfer/direct deposit</li>
+                  <li>PayPal</li>
+                  <li>Financing options (subject to approval)</li>
+                </ul>
+                <p className="text-zinc-700 mt-4">
+                  <strong>Payment Security:</strong> All payments are processed securely through PCI DSS compliant payment processors. We do not store complete credit card details on our servers.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">4.4 Order Confirmation and Acceptance</h3>
+                <p className="text-zinc-700 mb-3">Order acceptance is subject to:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Product availability</li>
+                  <li>Payment verification and authorization</li>
+                  <li>Delivery address validation</li>
+                  <li>Compliance with our terms and policies</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">4.5 Custom Orders and Specifications</h3>
+                <p className="text-zinc-700">
+                  For custom or configured carts, specifications will be confirmed in writing before production. Once production begins, changes may not be possible or may incur additional charges. Custom orders may require a deposit (typically 30-50% of total price) and have extended lead times.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Delivery and Collection */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              5. Delivery and Collection
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">5.1 Delivery Options</h3>
+                <p className="text-zinc-700 mb-3">We offer:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li><strong>Standard Delivery:</strong> Within Auckland metro area</li>
+                  <li><strong>Regional Delivery:</strong> Throughout New Zealand (additional charges apply)</li>
+                  <li><strong>Collection:</strong> Pick-up from our Auckland location by appointment</li>
+                  <li><strong>White-Glove Delivery:</strong> Premium delivery with setup and demonstration (available for select purchases)</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">5.2 Delivery Timeframes</h3>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700 mb-4">
+                  <li><strong>In-Stock Items:</strong> Typically 3-10 business days within Auckland</li>
+                  <li><strong>Custom/Special Orders:</strong> 6-12 weeks or as advised</li>
+                  <li><strong>Regional Deliveries:</strong> Additional 3-7 business days</li>
+                </ul>
+                <div className="bg-amber-50 border-l-4 border-amber-500 p-4">
+                  <p className="text-zinc-700">
+                    <strong>Important:</strong> Delivery timeframes are estimates only. While we strive to meet estimated delivery dates, delays may occur due to factors beyond our control (weather, supply chain issues, courier delays, etc.). We are not liable for delays unless caused by our negligence.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">5.3 Delivery Charges</h3>
+                <p className="text-zinc-700 mb-3">Delivery costs vary based on:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Delivery location and distance</li>
+                  <li>Product size and weight</li>
+                  <li>Delivery service level selected</li>
+                  <li>Accessibility of delivery address</li>
+                </ul>
+                <p className="text-zinc-700 mt-4">
+                  Delivery charges will be clearly displayed during checkout before payment.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">5.4 Delivery Requirements</h3>
+                <p className="text-zinc-700 mb-3">You are responsible for:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Providing accurate delivery address and contact information</li>
+                  <li>Ensuring someone 18+ is available to accept delivery</li>
+                  <li>Providing suitable access for delivery (clear pathways, adequate space)</li>
+                  <li>Inspecting goods upon delivery and noting any visible damage</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">5.5 Failed Delivery</h3>
+                <p className="text-zinc-700 mb-3">
+                  If delivery fails due to your unavailability or incorrect information:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>We will attempt to contact you to reschedule</li>
+                  <li>Redelivery fees may apply</li>
+                  <li>Products may be returned to our warehouse with storage charges</li>
+                  <li>Unclaimed orders may be cancelled with restocking fees deducted from refund</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">5.6 Risk and Title</h3>
+                <p className="text-zinc-700">
+                  <strong>Ownership:</strong> Title to goods passes to you upon full payment.<br />
+                  <strong>Risk:</strong> Risk of loss or damage passes to you upon delivery (or collection if you pick up).
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Warranty Information */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              6. Warranty Information
+            </h2>
+            <p className="text-zinc-700 leading-relaxed mb-6">
+              Club Caddy Carts stands behind the quality of our products. Our warranty coverage varies by product tier and component:
+            </p>
+
+            <div className="space-y-6">
+              <div className="bg-gradient-to-br from-amber-50 to-yellow-50 p-6 rounded-lg border-l-4 border-amber-500">
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-4">6.1 Comprehensive Warranty Coverage</h3>
+
+                <div className="space-y-4">
+                  <div className="bg-white p-4 rounded">
+                    <h4 className="font-semibold text-rose-800 mb-2">Premium Tier (5-Year Warranty)</h4>
+                    <ul className="list-disc pl-6 space-y-1 text-zinc-700 text-sm">
+                      <li>Lithium battery system: 5 years</li>
+                      <li>Motor and drivetrain: 5 years</li>
+                      <li>Frame and chassis: 5 years</li>
+                      <li>Electronic components: 3 years</li>
+                      <li>Accessories and cosmetics: 2 years</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white p-4 rounded">
+                    <h4 className="font-semibold text-rose-800 mb-2">Standard Tier (3-Year Warranty)</h4>
+                    <ul className="list-disc pl-6 space-y-1 text-zinc-700 text-sm">
+                      <li>Lithium battery system: 3 years</li>
+                      <li>Motor and drivetrain: 3 years</li>
+                      <li>Frame and chassis: 3 years</li>
+                      <li>Electronic components: 2 years</li>
+                      <li>Accessories and cosmetics: 1 year</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white p-4 rounded">
+                    <h4 className="font-semibold text-rose-800 mb-2">Essential Tier (2-Year Warranty)</h4>
+                    <ul className="list-disc pl-6 space-y-1 text-zinc-700 text-sm">
+                      <li>Lithium battery system: 2 years</li>
+                      <li>Motor and drivetrain: 2 years</li>
+                      <li>Frame and chassis: 2 years</li>
+                      <li>Electronic components: 1 year</li>
+                      <li>Accessories and cosmetics: 1 year</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">6.2 Warranty Coverage Details</h3>
+                <p className="text-zinc-700 mb-3"><strong>What is Covered:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700 mb-4">
+                  <li>Defects in materials and workmanship</li>
+                  <li>Manufacturing defects</li>
+                  <li>Failure of components under normal use</li>
+                  <li>Premature wear of parts beyond reasonable expectations</li>
+                </ul>
+
+                <p className="text-zinc-700 mb-3"><strong>What is NOT Covered:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Normal wear and tear (tires, brake pads, etc.)</li>
+                  <li>Damage from misuse, abuse, or negligence</li>
+                  <li>Accidents, collisions, or external impacts</li>
+                  <li>Modifications or unauthorized repairs</li>
+                  <li>Failure to perform recommended maintenance</li>
+                  <li>Environmental damage (corrosion, UV degradation, etc.)</li>
+                  <li>Commercial use beyond rated capacity</li>
+                  <li>Cosmetic issues that don't affect functionality</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">6.3 Warranty Claims Process</h3>
+                <p className="text-zinc-700 mb-3">To make a warranty claim:</p>
+                <ol className="list-decimal pl-6 space-y-2 text-zinc-700">
+                  <li>Contact us at admin@clubcaddycarts.com with your order number and description of the issue</li>
+                  <li>Provide photos/videos of the defect or problem</li>
+                  <li>Provide proof of purchase and warranty documentation</li>
+                  <li>Allow us to inspect the product (may require return to our facility)</li>
+                  <li>We will determine if the issue is covered under warranty</li>
+                </ol>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">6.4 Warranty Remedies</h3>
+                <p className="text-zinc-700 mb-3">If a warranty claim is valid, we will, at our discretion:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Repair the defective product or component</li>
+                  <li>Replace the defective product or component</li>
+                  <li>Provide a refund of the purchase price</li>
+                </ul>
+                <p className="text-zinc-700 mt-4">
+                  <strong>Warranty Costs:</strong> Warranty repairs/replacements are provided free of charge. However, you may be responsible for transportation costs to/from our service center.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">6.5 Warranty Transfer</h3>
+                <p className="text-zinc-700">
+                  Warranties are transferable to subsequent owners during the warranty period, provided proper ownership transfer documentation is provided and the product has been properly maintained.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Consumer Guarantees Act */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              7. Consumer Guarantees Act 1993
+            </h2>
+            <p className="text-zinc-700 leading-relaxed mb-6">
+              Your rights under the New Zealand Consumer Guarantees Act 1993 (CGA) are in addition to our warranty and cannot be excluded for consumer purchases.
+            </p>
+
+            <div className="space-y-6">
+              <div className="bg-green-50 border-l-4 border-green-500 p-6">
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">7.1 Your Statutory Rights</h3>
+                <p className="text-zinc-700 mb-3">Under the CGA, products must be:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li><strong>Acceptable Quality:</strong> Free from defects, safe, durable, and acceptable in appearance and finish</li>
+                  <li><strong>Fit for Purpose:</strong> Suitable for any specific purpose you made known to us</li>
+                  <li><strong>Match Description:</strong> Match any description given by us or the manufacturer</li>
+                  <li><strong>Match Sample:</strong> Match any sample or demonstration model</li>
+                  <li><strong>Reasonably Priced:</strong> Spare parts and repair facilities must be reasonably available</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">7.2 Remedies Under CGA</h3>
+                <p className="text-zinc-700 mb-3">If a product fails to meet these guarantees, you are entitled to:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li><strong>For Minor Failures:</strong> Repair or replacement at our option</li>
+                  <li><strong>For Major Failures:</strong> Reject the goods for a full refund or replacement, or keep the goods and seek compensation for loss in value</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">7.3 Business Use Exclusion</h3>
+                <div className="bg-amber-50 border-l-4 border-amber-500 p-4">
+                  <p className="text-zinc-700">
+                    <strong>Important:</strong> If you acquire goods for business purposes, the Consumer Guarantees Act does not apply. For business purchases, our standard warranty terms apply, and liability is limited as set out in Section 12 of these Terms.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">7.4 Reasonable Time for Remedies</h3>
+                <p className="text-zinc-700">
+                  Any remedies under the CGA or our warranty must be sought within a reasonable time. What constitutes "reasonable time" depends on factors including the nature of the product, purchase price, and expected lifespan.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Returns and Cancellations */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              8. Returns and Cancellations
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">8.1 Change of Mind Returns</h3>
+                <p className="text-zinc-700 mb-3">
+                  We offer a 14-day change of mind return policy for standard products, subject to:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Product is in original, unused condition with all packaging and accessories</li>
+                  <li>Product has not been registered or activated</li>
+                  <li>You arrange and pay for return shipping</li>
+                  <li>A 15% restocking fee may apply</li>
+                  <li>Original delivery charges are non-refundable</li>
+                </ul>
+                <p className="text-zinc-700 mt-4">
+                  <strong>Exclusions:</strong> Custom orders, configured products, and clearance items cannot be returned for change of mind.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">8.2 Faulty Product Returns</h3>
+                <p className="text-zinc-700 mb-3">
+                  For defective products covered by warranty or CGA:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Contact us immediately to report the defect</li>
+                  <li>We will arrange collection or provide a return shipping label</li>
+                  <li>No restocking fee applies for genuine faults</li>
+                  <li>Full refund, repair, or replacement as appropriate</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">8.3 Order Cancellation</h3>
+                <p className="text-zinc-700 mb-3"><strong>Before Shipment/Production:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700 mb-4">
+                  <li>Contact us as soon as possible</li>
+                  <li>Cancellation may be possible with minimal or no fees</li>
+                  <li>Custom orders may incur cancellation fees if production has started</li>
+                </ul>
+
+                <p className="text-zinc-700 mb-3"><strong>After Shipment:</strong></p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Standard return policy applies</li>
+                  <li>You are responsible for return shipping costs</li>
+                  <li>Restocking fees may apply</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">8.4 Refund Processing</h3>
+                <p className="text-zinc-700 mb-3">Approved refunds will be processed:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>To the original payment method</li>
+                  <li>Within 5-10 business days of receiving returned goods or approval</li>
+                  <li>After inspection confirms product condition</li>
+                  <li>Less any applicable fees (restocking, return shipping, etc.)</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* Hire/Rental Terms */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              9. Hire/Rental Terms
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">9.1 Rental Agreement</h3>
+                <p className="text-zinc-700 mb-3">
+                  Each hire is subject to a separate rental agreement specifying:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Rental period (start and end dates/times)</li>
+                  <li>Rental rate and total charges</li>
+                  <li>Security deposit requirements</li>
+                  <li>Insurance requirements and excess</li>
+                  <li>Permitted use and restrictions</li>
+                  <li>Condition of equipment at handover</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">9.2 Security Deposit</h3>
+                <p className="text-zinc-700 mb-3">
+                  A refundable security deposit is required for all rentals:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Amount varies based on equipment value and rental duration</li>
+                  <li>Held via credit card pre-authorization or separate payment</li>
+                  <li>Returned within 7 business days if equipment returned in acceptable condition</li>
+                  <li>May be used to cover damage, loss, late fees, or cleaning charges</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">9.3 Hirer Responsibilities</h3>
+                <p className="text-zinc-700 mb-3">As the hirer, you agree to:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Use equipment only for lawful purposes and as intended</li>
+                  <li>Operate equipment safely and in accordance with manufacturer guidelines</li>
+                  <li>Not sublease or allow unauthorized persons to use the equipment</li>
+                  <li>Keep equipment secure and protected from theft or damage</li>
+                  <li>Report any damage or malfunction immediately</li>
+                  <li>Return equipment clean and in the same condition as received</li>
+                  <li>Maintain insurance coverage (or purchase our rental insurance)</li>
+                  <li>Pay all rental fees, late fees, and damage charges promptly</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">9.4 Damage and Loss</h3>
+                <p className="text-zinc-700 mb-3">
+                  You are liable for any damage to or loss of rented equipment during the rental period:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li><strong>Minor Damage:</strong> Repair costs deducted from security deposit</li>
+                  <li><strong>Major Damage:</strong> Full repair costs or replacement value</li>
+                  <li><strong>Theft/Total Loss:</strong> Full replacement value plus loss of rental income</li>
+                  <li><strong>Insurance Excess:</strong> If insured, you pay the excess amount (typically $500-$2,000)</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">9.5 Late Returns</h3>
+                <p className="text-zinc-700 mb-3">
+                  Equipment must be returned by the agreed return date/time:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li><strong>Late Fees:</strong> Daily rental rate plus 50% surcharge per day overdue</li>
+                  <li><strong>Extensions:</strong> Must be arranged and paid for in advance (subject to availability)</li>
+                  <li><strong>Unreturned Equipment:</strong> Failure to return may result in police report and legal action</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">9.6 Rental Cancellation</h3>
+                <p className="text-zinc-700 mb-3">Cancellation fees:</p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li><strong>More than 7 days before rental:</strong> Full refund minus $50 admin fee</li>
+                  <li><strong>3-7 days before rental:</strong> 50% refund</li>
+                  <li><strong>Less than 3 days before rental:</strong> No refund</li>
+                  <li><strong>Early return:</strong> No refund for unused rental days</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* Intellectual Property */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              10. Intellectual Property
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">10.1 Our Content and Trademarks</h3>
+                <p className="text-zinc-700 mb-3">
+                  All content on our website, including but not limited to:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Text, graphics, logos, images, and videos</li>
+                  <li>Software, code, and functionality</li>
+                  <li>Design elements and layout</li>
+                  <li>Product descriptions and specifications</li>
+                  <li>Trademarks and brand names</li>
+                </ul>
+                <p className="text-zinc-700 mt-4">
+                  ...are owned by or licensed to Club Caddy Carts and protected by copyright, trademark, and other intellectual property laws.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">10.2 Limited License</h3>
+                <p className="text-zinc-700">
+                  You are granted a limited, non-exclusive, non-transferable license to access and use our website for personal, non-commercial purposes. You may not reproduce, distribute, modify, or create derivative works without our prior written consent.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">10.3 User Content</h3>
+                <p className="text-zinc-700 mb-3">
+                  If you submit content (reviews, testimonials, photos, etc.), you grant us:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>A worldwide, royalty-free, perpetual license to use, reproduce, and display your content</li>
+                  <li>The right to use your name and likeness in connection with the content</li>
+                  <li>The right to edit or remove content at our discretion</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* Privacy and Data Protection */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              11. Privacy and Data Protection
+            </h2>
+            <p className="text-zinc-700 leading-relaxed mb-4">
+              We are committed to protecting your privacy and personal information in accordance with the New Zealand Privacy Act 2020.
+            </p>
+            <p className="text-zinc-700 leading-relaxed mb-4">
+              Our collection, use, storage, and disclosure of your personal information is governed by our comprehensive <Link href="/privacy" className="text-rose-800 underline hover:text-rose-900 font-semibold">Privacy Policy</Link>.
+            </p>
+            <p className="text-zinc-700 leading-relaxed">
+              By using our services, you consent to the collection and use of your information as described in our Privacy Policy.
+            </p>
+          </section>
+
+          {/* Limitation of Liability */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              12. Limitation of Liability
+            </h2>
+
+            <div className="space-y-6">
+              <div className="bg-amber-50 border-l-4 border-amber-500 p-6">
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">12.1 Consumer Purchases</h3>
+                <p className="text-zinc-700">
+                  <strong>Nothing in these Terms limits or excludes our liability for:</strong>
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700 mt-3">
+                  <li>Death or personal injury caused by our negligence</li>
+                  <li>Fraud or fraudulent misrepresentation</li>
+                  <li>Rights under the Consumer Guarantees Act 1993</li>
+                  <li>Any other liability that cannot be excluded under New Zealand law</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">12.2 Business Purchases</h3>
+                <p className="text-zinc-700 mb-3">
+                  For business purchases (where CGA does not apply), to the maximum extent permitted by law:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Our total liability is limited to the purchase price of the product</li>
+                  <li>We exclude liability for indirect, consequential, or special damages</li>
+                  <li>We exclude liability for loss of profits, revenue, data, or business opportunities</li>
+                  <li>Our warranty obligations are limited to those set out in Section 6</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">12.3 Website Use</h3>
+                <p className="text-zinc-700 mb-3">
+                  Our website is provided "as is" without warranties of any kind:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>We do not guarantee uninterrupted or error-free access</li>
+                  <li>We are not liable for viruses, malware, or security breaches beyond our reasonable control</li>
+                  <li>Information on our website is for general guidance only</li>
+                  <li>We are not liable for decisions made based on website content</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">12.4 Third-Party Links</h3>
+                <p className="text-zinc-700">
+                  Our website may contain links to third-party websites. We have no control over and accept no responsibility for the content, privacy policies, or practices of third-party websites.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Indemnification */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              13. Indemnification
+            </h2>
+            <p className="text-zinc-700 leading-relaxed mb-4">
+              You agree to indemnify, defend, and hold harmless Club Caddy Carts, its directors, officers, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising from:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+              <li>Your breach of these Terms</li>
+              <li>Your misuse of products or services</li>
+              <li>Your violation of any law or third-party rights</li>
+              <li>Your negligence or willful misconduct</li>
+              <li>Unauthorized use of rented equipment</li>
             </ul>
+          </section>
+
+          {/* Governing Law and Disputes */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              14. Governing Law and Disputes
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">14.1 Governing Law</h3>
+                <p className="text-zinc-700">
+                  These Terms are governed by and construed in accordance with the laws of New Zealand. The New Zealand courts have exclusive jurisdiction over any disputes arising from these Terms.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">14.2 Dispute Resolution</h3>
+                <p className="text-zinc-700 mb-3">
+                  If a dispute arises, we encourage you to first contact us to resolve it informally:
+                </p>
+                <ol className="list-decimal pl-6 space-y-2 text-zinc-700">
+                  <li>Contact us at admin@clubcaddycarts.com with details of the dispute</li>
+                  <li>We will acknowledge receipt within 2 business days</li>
+                  <li>We will attempt good-faith negotiation for 30 days</li>
+                  <li>If unresolved, either party may pursue mediation or legal action</li>
+                </ol>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">14.3 Consumer Dispute Resolution</h3>
+                <p className="text-zinc-700 mb-3">
+                  For consumer disputes, you may also contact:
+                </p>
+                <div className="bg-zinc-50 p-4 rounded-lg">
+                  <p className="font-semibold text-rose-800 mb-2">Disputes Tribunal</p>
+                  <p className="text-zinc-700 text-sm mb-1">For claims up to $30,000 (or $20,000 if the other party doesn't consent)</p>
+                  <p className="text-zinc-700 text-sm mb-3">Website: disputestribunal.govt.nz</p>
+
+                  <p className="font-semibold text-rose-800 mb-2 mt-4">Commerce Commission</p>
+                  <p className="text-zinc-700 text-sm mb-1">For Fair Trading Act or Consumer Guarantees Act complaints</p>
+                  <p className="text-zinc-700 text-sm">Website: comcom.govt.nz | Phone: 0800 943 600</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* General Provisions */}
+          <section className="mb-12">
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              15. General Provisions
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">15.1 Entire Agreement</h3>
+                <p className="text-zinc-700">
+                  These Terms, together with our Privacy Policy and any specific rental or purchase agreements, constitute the entire agreement between you and Club Caddy Carts and supersede all prior agreements and understandings.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">15.2 Amendments</h3>
+                <p className="text-zinc-700 mb-3">
+                  We may update these Terms from time to time. Changes will be posted on this page with an updated "Last Updated" date. Continued use of our services after changes constitutes acceptance.
+                </p>
+                <p className="text-zinc-700">
+                  For material changes, we will provide notice via email or prominent website notification.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">15.3 Severability</h3>
+                <p className="text-zinc-700">
+                  If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions will continue in full force and effect.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">15.4 Waiver</h3>
+                <p className="text-zinc-700">
+                  Our failure to enforce any right or provision of these Terms does not constitute a waiver of that right or provision.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">15.5 Assignment</h3>
+                <p className="text-zinc-700">
+                  You may not assign or transfer these Terms or your rights hereunder without our prior written consent. We may assign these Terms to any successor entity.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">15.6 Force Majeure</h3>
+                <p className="text-zinc-700 mb-3">
+                  We are not liable for failure to perform our obligations due to circumstances beyond our reasonable control, including:
+                </p>
+                <ul className="list-disc pl-6 space-y-2 text-zinc-700">
+                  <li>Natural disasters, pandemics, or severe weather</li>
+                  <li>War, terrorism, or civil unrest</li>
+                  <li>Government actions or regulatory changes</li>
+                  <li>Labor disputes or strikes</li>
+                  <li>Supplier failures or supply chain disruptions</li>
+                  <li>Technical failures beyond our control</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="refined-title text-xl font-semibold text-rose-800 mb-3">15.7 Notices</h3>
+                <p className="text-zinc-700 mb-3">
+                  Legal notices should be sent to:
+                </p>
+                <div className="bg-zinc-50 p-4 rounded-lg">
+                  <p className="text-zinc-700"><strong>Email:</strong> admin@clubcaddycarts.com</p>
+                  <p className="text-zinc-700"><strong>Address:</strong> Club Caddy Carts, Auckland, New Zealand</p>
+                </div>
+                <p className="text-zinc-700 mt-4">
+                  Notices to you will be sent to the email address or physical address associated with your account.
+                </p>
+              </div>
+            </div>
           </section>
 
           {/* Contact Information */}
           <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              19. Contact Information
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              16. Contact Information
             </h2>
-            <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-6">
-              <p className="refined-body text-zinc-700 mb-4 leading-relaxed">
-                For questions, concerns, or complaints regarding these Terms or our services:
-              </p>
-              <div className="space-y-2">
-                <p className="refined-body text-zinc-900 font-semibold text-lg mb-3">Club Caddy Carts Limited</p>
-                <p className="refined-body text-zinc-700">
-                  <span className="font-semibold">Email:</span> admin@clubcaddycarts.com
-                </p>
-                <p className="refined-body text-zinc-700">
-                  <span className="font-semibold">Phone:</span> +64 021 560 307
-                </p>
-                <p className="refined-body text-zinc-700">
-                  <span className="font-semibold">Website:</span> clubcaddycarts.com
-                </p>
-                <p className="refined-body text-zinc-700">
-                  <span className="font-semibold">Business Location:</span> Auckland, New Zealand
-                </p>
-                <div className="mt-4 pt-4 border-t border-zinc-300">
-                  <p className="refined-body text-zinc-900 font-semibold mb-2">Business Hours:</p>
-                  <p className="refined-body text-zinc-700">Monday - Friday: 9:00 AM - 5:00 PM (NZDT)</p>
-                  <p className="refined-body text-zinc-700">Saturday: 10:00 AM - 2:00 PM (NZDT)</p>
-                  <p className="refined-body text-zinc-700">Sunday: Closed</p>
-                </div>
-                <p className="refined-body text-zinc-700 mt-4">
-                  <span className="font-semibold">Customer Service:</span> We aim to respond to all enquiries within 1-2 business days.
-                </p>
+            <p className="text-zinc-700 leading-relaxed mb-6">
+              If you have any questions, concerns, or feedback regarding these Terms of Service, please contact us:
+            </p>
+
+            <div className="bg-zinc-50 border-l-4 border-rose-800 p-6">
+              <h3 className="refined-title text-xl font-semibold text-rose-800 mb-4">Club Caddy Carts</h3>
+              <div className="space-y-2 text-zinc-700">
+                <p><strong>Location:</strong> Auckland, New Zealand</p>
+                <p><strong>Email:</strong> <a href="mailto:admin@clubcaddycarts.com" className="text-rose-800 underline hover:text-rose-900">admin@clubcaddycarts.com</a></p>
+                <p><strong>Phone:</strong> <a href="tel:+64021560307" className="text-rose-800 underline hover:text-rose-900">+64 021 560 307</a></p>
+                <p><strong>Website:</strong> <a href="https://clubcaddycarts.com" className="text-rose-800 underline hover:text-rose-900">clubcaddycarts.com</a></p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-zinc-200">
+                <p className="text-zinc-600"><strong>Business Hours:</strong></p>
+                <p className="text-zinc-600 text-sm">Monday - Friday: 9:00 AM - 5:00 PM NZST</p>
+                <p className="text-zinc-600 text-sm">Saturday: 10:00 AM - 2:00 PM NZST</p>
+                <p className="text-zinc-600 text-sm">Sunday: Closed</p>
               </div>
             </div>
+
+            <p className="text-zinc-700 leading-relaxed mt-6">
+              We aim to respond to all inquiries within 1-2 business days.
+            </p>
           </section>
 
           {/* Acknowledgment */}
           <section className="mb-12">
-            <h2 className="refined-title text-3xl text-zinc-900 mb-6 pb-3 border-b-2 border-rose-800">
-              20. Acknowledgment and Consent
+            <h2 className="refined-title text-3xl font-bold text-rose-800 mb-6">
+              17. Acknowledgment and Acceptance
             </h2>
-            <p className="refined-body text-zinc-700 mb-3 leading-relaxed">
-              By using our Website, making a purchase, or hiring our products, you acknowledge that:
+            <p className="text-zinc-700 leading-relaxed mb-4">
+              By using our website, purchasing products, or hiring equipment from Club Caddy Carts, you acknowledge that:
             </p>
-            <ol className="list-decimal pl-6 mb-6 space-y-2">
-              <li className="refined-body text-zinc-700">You have read and understood these Terms in their entirety</li>
-              <li className="refined-body text-zinc-700">You agree to be bound by these Terms and any future modifications</li>
-              <li className="refined-body text-zinc-700">You understand your rights under New Zealand consumer protection laws</li>
-              <li className="refined-body text-zinc-700">You have had the opportunity to seek independent legal advice</li>
-              <li className="refined-body text-zinc-700">You consent to electronic communications and transactions</li>
-              <li className="refined-body text-zinc-700">All information you provide is accurate and complete</li>
-            </ol>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
-              <p className="refined-body text-zinc-900 font-semibold mb-2">For Consumer purchases:</p>
-              <p className="refined-body text-zinc-700 leading-relaxed">
-                You acknowledge that your rights under the Consumer Guarantees Act 1993 and Fair Trading Act 1986 cannot be excluded and take precedence over any conflicting provisions in these Terms.
-              </p>
-            </div>
-            <div className="bg-zinc-100 border-l-4 border-zinc-500 p-4">
-              <p className="refined-body text-zinc-900 font-semibold mb-2">For Business purchases:</p>
-              <p className="refined-body text-zinc-700 leading-relaxed">
-                If you are purchasing for business use and wish to exclude the Consumer Guarantees Act, you must provide written notice to us before completing your purchase.
-              </p>
-            </div>
-          </section>
+            <ul className="list-disc pl-6 space-y-2 text-zinc-700 mb-6">
+              <li>You have read and understood these Terms of Service in their entirety</li>
+              <li>You agree to be bound by these Terms and our Privacy Policy</li>
+              <li>You meet the eligibility requirements (age, capacity, etc.)</li>
+              <li>The information you provide is accurate and complete</li>
+              <li>You understand your rights and obligations under New Zealand law</li>
+              <li>You have had the opportunity to seek independent legal advice if desired</li>
+            </ul>
 
-          {/* Closing Statement */}
-          <div className="text-center py-8 border-t-2 border-zinc-200">
-            <p className="refined-body text-lg text-zinc-900 font-semibold mb-2">
+            <div className="bg-green-50 border-l-4 border-green-500 p-6">
+              <p className="text-zinc-700 leading-relaxed mb-4">
+                <strong>Consumer Rights Protected:</strong> These Terms are designed to comply with New Zealand consumer protection laws. Your statutory rights under the Consumer Guarantees Act 1993, Fair Trading Act 1986, and other applicable legislation are not affected by these Terms.
+              </p>
+              <p className="text-zinc-700 leading-relaxed">
+                We are committed to fair dealing, transparency, and providing you with premium products and exceptional service.
+              </p>
+            </div>
+
+            <p className="refined-title text-xl text-rose-800 font-semibold mt-6">
               Thank you for choosing Club Caddy Carts.
             </p>
-            <p className="refined-body text-zinc-700">
-              We look forward to serving you with premium electric golf cart solutions.
-            </p>
-          </div>
+          </section>
 
-          {/* Footer Note */}
-          <div className="mt-8 text-center text-sm text-zinc-500 space-y-2">
-            <p className="refined-body">
-              These Terms of Service were last updated on 9 December 2025. Please check our Website regularly for updates.
-            </p>
-            <p className="refined-body">
-              This document is provided for general information purposes. While we have taken care to ensure legal compliance, you should seek independent legal advice for your specific circumstances.
-            </p>
-          </div>
+          {/* Footer Section */}
+          <section className="border-t border-zinc-200 pt-8 mt-12">
+            <div className="bg-zinc-50 p-6 rounded-lg">
+              <h3 className="refined-title text-xl font-semibold text-rose-800 mb-4">Club Caddy Carts</h3>
+              <div className="space-y-1 text-zinc-700">
+                <p>Premium Electric Golf Cart Sales & Hire</p>
+                <p>Auckland, New Zealand</p>
+                <p>Email: admin@clubcaddycarts.com</p>
+                <p>Phone: +64 021 560 307</p>
+                <p>Website: clubcaddycarts.com</p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-zinc-200">
+                <p className="text-zinc-600 text-sm"><strong>Last Updated:</strong> December 10, 2025</p>
+                <p className="text-zinc-600 text-sm"><strong>Version:</strong> 1.0</p>
+              </div>
+            </div>
+
+            <div className="mt-6 p-4 bg-amber-50 border-l-4 border-amber-500">
+              <p className="text-zinc-700 text-sm italic">
+                This Terms of Service document is a legally binding agreement. By using our website and services, you acknowledge that you have read, understood, and agree to be bound by these Terms. For questions or concerns, please contact us at admin@clubcaddycarts.com.
+              </p>
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link
+                href="/privacy"
+                className="text-rose-800 hover:text-rose-900 underline font-semibold refined-body"
+              >
+                View Our Privacy Policy
+              </Link>
+            </div>
+          </section>
         </div>
+      </main>
 
-        {/* Back to Top Link */}
-        <div className="mt-12 text-center">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="inline-flex items-center px-6 py-3 bg-rose-800 text-white rounded-lg hover:bg-rose-900 transition-colors"
+      {/* Footer */}
+      <footer className="border-t border-zinc-200 mt-12">
+        <div className="container mx-auto px-4 py-8 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-rose-800 hover:text-rose-900 transition-colors refined-body font-medium"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-            </svg>
-            Back to Top
-          </button>
+            <ArrowLeft className="w-4 h-4" />
+            {t.backHome}
+          </Link>
         </div>
-      </div>
+      </footer>
     </div>
-  );
+  )
 }
