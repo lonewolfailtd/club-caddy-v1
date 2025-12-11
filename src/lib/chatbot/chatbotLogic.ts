@@ -70,7 +70,7 @@ export function getContextualNudge(pathname: string, language: Language): string
         "Want to know which cart suits you best?",
         "Curious about the differences between models?"
       ],
-      '/events': [
+      '/hire': [
         "Planning an event and need golf carts?",
         "Questions about event rentals?",
         "Need help with event logistics?"
@@ -104,7 +104,7 @@ export function getContextualNudge(pathname: string, language: Language): string
         "想知道哪款球车最适合您吗？",
         "好奇不同型号之间的差异吗？"
       ],
-      '/events': [
+      '/hire': [
         "计划活动需要高尔夫球车吗？",
         "关于活动租赁有疑问吗？",
         "需要帮助处理活动物流吗？"
@@ -128,11 +128,21 @@ export function getContextualNudge(pathname: string, language: Language): string
   }
 
   const langNudges = nudges[language]
-  const pageNudges = Object.keys(langNudges).find(key => pathname.startsWith(key))
-    ? langNudges[pathname as keyof typeof langNudges]
+  // Sort keys by length (longest first) to match most specific path first
+  const matchingKey = Object.keys(langNudges)
+    .filter(key => key !== 'default')
+    .sort((a, b) => b.length - a.length)
+    .find(key => pathname.startsWith(key))
+
+  const pageNudges = matchingKey
+    ? langNudges[matchingKey as keyof typeof langNudges]
     : langNudges.default
 
-  // @ts-ignore - pageNudges is an array
+  // Ensure pageNudges is defined and is an array
+  if (!pageNudges || !Array.isArray(pageNudges) || pageNudges.length === 0) {
+    return langNudges.default[0]
+  }
+
   return pageNudges[Math.floor(Math.random() * pageNudges.length)]
 }
 
@@ -246,7 +256,7 @@ function getEnglishResponse(input: string, pathname: string): ChatbotResponse {
       text: "Yes mate, we do rentals! Perfect for:\n• Weddings and events\n• Corporate functions\n• Festivals\n• Short-term needs\n• Try before you buy\n\nRental rates vary based on duration and model. Warren can sort you out with a custom package that fits your needs perfectly. Want me to put you in touch?",
       links: [
         { text: 'Book a rental', url: '/booking' },
-        { text: 'View events', url: '/events' }
+        { text: 'View hire options', url: '/hire' }
       ]
     }
   }

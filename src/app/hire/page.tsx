@@ -113,29 +113,45 @@ export default function EventsPage() {
           />
 
           <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-8">
-            <div className="text-center">
-              <div className="mb-6">
-                <span className="inline-block rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 text-sm font-semibold uppercase tracking-wider text-white border border-white/20">
-                  Event Rentals
-                </span>
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Column - Content */}
+              <div>
+                <div className="mb-6">
+                  <span className="inline-block rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 text-sm font-semibold uppercase tracking-wider text-white border border-white/20">
+                    Event Rentals
+                  </span>
+                </div>
+                <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  Golf Cart Rentals for Events & Work Functions
+                </h1>
+                <p className="mt-6 text-xl leading-8 text-white/90 font-light">
+                  Affordable multi-cart bookings for corporate events, competitions, weddings, and work functions. Flexible hourly, daily, and weekly rates with instant online booking.
+                </p>
+                <div className="mt-10 flex flex-col sm:flex-row items-start gap-4">
+                  <Link href="/rentals">
+                    <Button variant="elegant" size="lg" className="w-full sm:w-auto uppercase tracking-wider text-base px-8 py-6">
+                      View Rental Carts
+                    </Button>
+                  </Link>
+                  <Link href="/quote">
+                    <Button variant="elegantOutline" size="lg" className="w-full sm:w-auto uppercase tracking-wider text-base px-8 py-6 bg-white/10 backdrop-blur-sm">
+                      Get Custom Quote
+                    </Button>
+                  </Link>
+                </div>
+                <p className="mt-6 text-sm text-white/70 font-light">
+                  Click any cart to see rental pricing and book instantly
+                </p>
               </div>
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Golf Cart Rentals for Events & Work Functions in Auckland
-              </h1>
-              <p className="mx-auto mt-6 max-w-3xl text-xl leading-8 text-white/90 font-light">
-                Affordable multi-cart bookings for corporate events, competitions, weddings, and work functions. Flexible hourly, daily, and weekly rates with instant online booking.
-              </p>
-              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/products">
-                  <Button variant="elegant" size="lg" className="w-full sm:w-auto uppercase tracking-wider text-base px-8 py-6">
-                    Browse Available Carts
-                  </Button>
-                </Link>
-                <Link href="/quote">
-                  <Button variant="elegantOutline" size="lg" className="w-full sm:w-auto uppercase tracking-wider text-base px-8 py-6 bg-white/10 backdrop-blur-sm">
-                    Get Custom Quote
-                  </Button>
-                </Link>
+
+              {/* Right Column - Golf Cart Image */}
+              <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[500px] rounded-sm overflow-hidden border-2 border-white/20 shadow-2xl">
+                <img
+                  src="/images/products/caddy-cart14.jpg"
+                  alt="Premium Golf Cart for Events"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-rose-900/30 to-transparent"></div>
               </div>
             </div>
           </div>
@@ -402,9 +418,9 @@ export default function EventsPage() {
                 Check availability, get instant pricing, and book online in minutes. For custom event quotes or large bookings (10+ carts), contact our team directly.
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-                <Link href="/products">
+                <Link href="/rentals">
                   <Button variant="elegant" size="lg" className="w-full sm:w-auto uppercase tracking-wider text-base px-10 py-6">
-                    Book Online Now
+                    View Rental Carts
                   </Button>
                 </Link>
                 <Link href="/quote">
@@ -413,6 +429,9 @@ export default function EventsPage() {
                   </Button>
                 </Link>
               </div>
+              <p className="mt-6 text-sm text-zinc-400 font-light">
+                Select a cart → Choose dates → Enter details → Complete payment
+              </p>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 text-zinc-300">
                 <a href="tel:+64021560307" className="flex items-center gap-2 hover:text-white transition-colors">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

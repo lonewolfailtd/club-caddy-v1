@@ -115,11 +115,11 @@ export default function CartQuantitySelector({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
-      <Card className="p-6 bg-zinc-900/50 border-zinc-800">
+      <Card className="p-8 bg-white border-2 border-zinc-200 shadow-sm">
         <div className="space-y-6">
           {/* Quantity Selector */}
           <div>
-            <Label className="text-zinc-400 mb-3 block">Number of Golf Carts</Label>
+            <Label className="refined-body text-sm font-medium text-zinc-700 mb-3 block">Number of Golf Carts</Label>
 
             <div className="flex items-center gap-4">
               <Button
@@ -127,7 +127,7 @@ export default function CartQuantitySelector({
                 size="icon"
                 onClick={handleDecrement}
                 disabled={quantity <= 1}
-                className="h-12 w-12 border-zinc-700 hover:border-rose-800 hover:bg-rose-900/20"
+                className="h-12 w-12 border-2 border-zinc-300 hover:border-rose-800 hover:bg-rose-50 text-zinc-900"
               >
                 <Minus className="h-5 w-5" />
               </Button>
@@ -139,7 +139,7 @@ export default function CartQuantitySelector({
                   onChange={handleInputChange}
                   min={1}
                   max={maxQuantity}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white text-center text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-rose-800"
+                  className="w-full px-4 py-3 bg-zinc-900 border-2 border-zinc-900 rounded-sm text-white text-center text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-rose-800"
                 />
               </div>
 
@@ -148,13 +148,13 @@ export default function CartQuantitySelector({
                 size="icon"
                 onClick={handleIncrement}
                 disabled={quantity >= maxQuantity}
-                className="h-12 w-12 border-zinc-700 hover:border-rose-800 hover:bg-rose-900/20"
+                className="h-12 w-12 border-2 border-zinc-300 hover:border-rose-800 hover:bg-rose-50 text-zinc-900"
               >
                 <Plus className="h-5 w-5" />
               </Button>
             </div>
 
-            <div className="flex justify-between items-center mt-2 text-sm text-zinc-500">
+            <div className="flex justify-between items-center mt-2 text-sm text-zinc-500 refined-body">
               <span>Minimum: 1 cart</span>
               <span>Maximum: {maxQuantity} carts</span>
             </div>
@@ -167,29 +167,29 @@ export default function CartQuantitySelector({
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex items-center gap-2 p-3 bg-zinc-800/50 border border-zinc-700 rounded-lg"
+                  className="flex items-center gap-2 p-4 bg-zinc-50 border-2 border-zinc-200 rounded-sm refined-body"
                 >
-                  <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
-                  <span className="text-zinc-400">Checking availability...</span>
+                  <Loader2 className="w-5 h-5 animate-spin text-rose-800" />
+                  <span className="text-zinc-600">Checking availability...</span>
                 </motion.div>
               ) : availabilityStatus ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className={`flex items-center gap-2 p-3 rounded-lg border ${
+                  className={`flex items-center gap-2 p-4 rounded-sm border-2 refined-body ${
                     availabilityStatus.available
-                      ? 'bg-green-900/20 border-green-800'
-                      : 'bg-red-900/20 border-red-800'
+                      ? 'bg-rose-50 border-rose-800'
+                      : 'bg-red-50 border-red-600'
                   }`}
                 >
                   {availabilityStatus.available ? (
-                    <CheckCircle className="w-5 h-5 text-green-400" />
+                    <CheckCircle className="w-5 h-5 text-rose-800" />
                   ) : (
-                    <XCircle className="w-5 h-5 text-red-400" />
+                    <XCircle className="w-5 h-5 text-red-600" />
                   )}
                   <span
                     className={
-                      availabilityStatus.available ? 'text-green-400' : 'text-red-400'
+                      availabilityStatus.available ? 'text-rose-800 font-medium' : 'text-red-600 font-medium'
                     }
                   >
                     {availabilityStatus.message}
@@ -204,14 +204,14 @@ export default function CartQuantitySelector({
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-3 p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg"
+              className="flex items-center gap-3 p-4 bg-zinc-50 border-2 border-zinc-200 rounded-sm"
             >
-              <div className={quantityMessage.color}>{quantityMessage.icon}</div>
+              <div className="text-rose-800">{quantityMessage.icon}</div>
               <div>
-                <div className={`font-medium ${quantityMessage.color}`}>
+                <div className="refined-body font-medium text-zinc-900">
                   {quantityMessage.text}
                 </div>
-                <div className="text-xs text-zinc-500 mt-1">
+                <div className="refined-body text-xs text-zinc-500 mt-1">
                   Contact us for bulk pricing on 10+ carts
                 </div>
               </div>
@@ -219,9 +219,9 @@ export default function CartQuantitySelector({
           )}
 
           {/* Price Per Cart Display */}
-          <div className="flex justify-between items-center p-4 bg-zinc-800/30 rounded-lg">
-            <span className="text-zinc-400">Price per cart</span>
-            <span className="text-xl font-bold text-white">
+          <div className="flex justify-between items-center p-4 bg-zinc-50 border border-zinc-200 rounded-sm">
+            <span className="refined-body text-zinc-600">Price per cart</span>
+            <span className="refined-body text-xl font-bold text-zinc-900">
               ${unitPrice.toFixed(2)}
             </span>
           </div>
@@ -231,15 +231,15 @@ export default function CartQuantitySelector({
             key={quantity}
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
-            className="flex justify-between items-center p-4 bg-rose-900/20 border border-rose-800 rounded-lg"
+            className="flex justify-between items-center p-5 bg-rose-50 border-2 border-rose-800 rounded-sm"
           >
             <div>
-              <div className="text-zinc-400 text-sm">Subtotal for {quantity} cart{quantity > 1 ? 's' : ''}</div>
-              <div className="text-xs text-zinc-500 mt-1">
+              <div className="refined-body text-rose-900 text-sm font-medium">Subtotal for {quantity} cart{quantity > 1 ? 's' : ''}</div>
+              <div className="refined-body text-xs text-rose-800 mt-1">
                 ${unitPrice.toFixed(2)} × {quantity}
               </div>
             </div>
-            <span className="text-3xl font-bold text-white">
+            <span className="refined-title text-3xl font-bold text-rose-900">
               ${(unitPrice * quantity).toFixed(2)}
             </span>
           </motion.div>
@@ -249,12 +249,12 @@ export default function CartQuantitySelector({
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-3 bg-amber-900/20 border border-amber-800 rounded-lg"
+              className="p-4 bg-rose-50 border-2 border-rose-800 rounded-sm"
             >
-              <div className="text-sm text-amber-400 font-medium">
+              <div className="refined-body text-sm text-rose-900 font-semibold">
                 💡 Bulk Rental Discount Available!
               </div>
-              <div className="text-xs text-amber-500 mt-1">
+              <div className="refined-body text-xs text-rose-800 mt-1">
                 You may be eligible for special pricing on {quantity}+ carts. Our team will review your booking.
               </div>
             </motion.div>

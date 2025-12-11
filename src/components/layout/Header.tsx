@@ -31,7 +31,7 @@ export default function Header() {
   const navigation = [
     { name: t.nav.home, href: '/' },
     { name: t.nav.products, href: '/products' },
-    { name: 'Events & Rentals', href: '/events' },
+    { name: t.nav.hire, href: '/hire' },
     { name: t.nav.about, href: '/about' },
     { name: t.nav.contact, href: '/contact' },
   ]
@@ -189,21 +189,14 @@ export default function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <>
-                  <Link href="/login">
-                    <Button
-                      variant="ghost"
-                      className="refined-body text-zinc-600 hover:text-rose-800 hover:bg-rose-50 transition-all duration-300"
-                    >
-                      {t.nav.login}
-                    </Button>
-                  </Link>
-                  <Link href="/register">
-                    <Button className="refined-body bg-rose-800 hover:bg-rose-900 shadow-sm hover:shadow-md transition-all duration-300 !text-white">
-                      {t.nav.signup}
-                    </Button>
-                  </Link>
-                </>
+                <Link href="/login">
+                  <Button
+                    variant="ghost"
+                    className="refined-body text-zinc-600 hover:text-rose-800 hover:bg-rose-50 transition-all duration-300"
+                  >
+                    {t.nav.login}
+                  </Button>
+                </Link>
               )}
             </div>
 
@@ -336,20 +329,12 @@ export default function Header() {
                   </button>
                 </>
               ) : (
-                <div className="space-y-2">
-                  <Link
-                    href="/login"
-                    className="block rounded-lg px-4 py-3 text-base font-semibold refined-body text-zinc-600 hover:bg-rose-50 hover:text-rose-800 transition-all duration-300"
-                  >
-                    {t.nav.login}
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="block rounded-lg px-4 py-3 text-center text-base font-semibold refined-body bg-rose-800 text-white hover:bg-rose-900 shadow-sm"
-                  >
-                    {t.nav.signup}
-                  </Link>
-                </div>
+                <Link
+                  href="/login"
+                  className="block rounded-lg px-4 py-3 text-base font-semibold refined-body text-zinc-600 hover:bg-rose-50 hover:text-rose-800 transition-all duration-300"
+                >
+                  {t.nav.login}
+                </Link>
               )}
             </div>
           </div>

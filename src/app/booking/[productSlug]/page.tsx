@@ -271,22 +271,29 @@ export default function BookingPage() {
   if (!product || !rentalPricing) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-50">
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap');
+        .refined-title { font-family: 'Playfair Display', serif; }
+        .refined-body { font-family: 'Inter', sans-serif; }
+      `}</style>
+
       {/* Header */}
-      <div className="bg-zinc-900/50 border-b border-zinc-800">
-        <div className="container mx-auto px-4 py-6">
+      <div className="bg-white border-b border-zinc-200">
+        <div className="container mx-auto px-4 py-8">
           <Link
             href={`/products/${slug}`}
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 refined-body text-sm text-zinc-600 hover:text-rose-800 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to {product.name}
           </Link>
-          <h1 className="text-3xl font-bold text-white mt-4">
-            Book Your {product.name}
+          <div className="w-12 h-px bg-rose-800 mt-6 mb-4"></div>
+          <h1 className="refined-title text-4xl font-bold text-zinc-900 mt-4">
+            Reserve Your {product.name}
           </h1>
-          <p className="text-zinc-400 mt-2">
-            Complete your booking in just a few steps
+          <p className="refined-body text-lg text-zinc-600 mt-3 font-light">
+            Complete your rental reservation in a few simple steps
           </p>
         </div>
       </div>
@@ -301,9 +308,9 @@ export default function BookingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="mb-4">
-                <h2 className="text-2xl font-bold text-white">1. Select Dates & Rental Type</h2>
-                <p className="text-zinc-400">Choose your rental period</p>
+              <div className="mb-6">
+                <h2 className="refined-title text-2xl font-bold text-zinc-900">1. Select Dates & Rental Type</h2>
+                <p className="refined-body text-zinc-600 mt-1 font-light">Choose your rental period</p>
               </div>
               <BookingCalendar
                 productId={product.id}
@@ -325,9 +332,9 @@ export default function BookingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="mb-4">
-                  <h2 className="text-2xl font-bold text-white">2. Select Quantity</h2>
-                  <p className="text-zinc-400">How many golf carts do you need?</p>
+                <div className="mb-6">
+                  <h2 className="refined-title text-2xl font-bold text-zinc-900">2. Select Quantity</h2>
+                  <p className="refined-body text-zinc-600 mt-1 font-light">How many golf carts do you need?</p>
                 </div>
                 <CartQuantitySelector
                   productId={product.id}
@@ -348,78 +355,78 @@ export default function BookingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <Card className="p-6 bg-zinc-900/50 border-zinc-800">
+                <Card className="p-8 bg-white border-2 border-zinc-200 shadow-sm">
                   <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-white">3. Your Information</h2>
-                    <p className="text-zinc-400">We'll use this to confirm your booking</p>
+                    <h2 className="refined-title text-2xl font-bold text-zinc-900">3. Your Information</h2>
+                    <p className="refined-body text-zinc-600 mt-1 font-light">We'll use this to confirm your reservation</p>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div>
-                      <Label className="text-zinc-400">Full Name *</Label>
+                      <Label className="refined-body text-sm font-medium text-zinc-700 mb-2 block">Full Name *</Label>
                       <Input
                         value={formData.customerName}
                         onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                        className="mt-2 bg-zinc-800 border-zinc-700 text-white"
+                        className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         placeholder="John Smith"
                       />
                       {validationErrors.customerName && (
-                        <p className="text-red-400 text-sm mt-1">{validationErrors.customerName}</p>
+                        <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.customerName}</p>
                       )}
                     </div>
 
                     <div>
-                      <Label className="text-zinc-400">Email Address *</Label>
+                      <Label className="refined-body text-sm font-medium text-zinc-700 mb-2 block">Email Address *</Label>
                       <Input
                         type="email"
                         value={formData.customerEmail}
                         onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                        className="mt-2 bg-zinc-800 border-zinc-700 text-white"
+                        className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         placeholder="john@example.com"
                       />
                       {validationErrors.customerEmail && (
-                        <p className="text-red-400 text-sm mt-1">{validationErrors.customerEmail}</p>
+                        <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.customerEmail}</p>
                       )}
                     </div>
 
                     <div>
-                      <Label className="text-zinc-400">Phone Number *</Label>
+                      <Label className="refined-body text-sm font-medium text-zinc-700 mb-2 block">Phone Number *</Label>
                       <Input
                         type="tel"
                         value={formData.customerPhone}
                         onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                        className="mt-2 bg-zinc-800 border-zinc-700 text-white"
+                        className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         placeholder="+64 21 234 5678"
                       />
                       {validationErrors.customerPhone && (
-                        <p className="text-red-400 text-sm mt-1">{validationErrors.customerPhone}</p>
+                        <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.customerPhone}</p>
                       )}
                     </div>
 
                     <div>
-                      <Label className="text-zinc-400">Delivery or Pickup?</Label>
-                      <div className="flex gap-4 mt-2">
+                      <Label className="refined-body text-sm font-medium text-zinc-700 mb-3 block">Delivery or Pickup?</Label>
+                      <div className="grid grid-cols-2 gap-4">
                         <button
                           onClick={() => setFormData({ ...formData, needsDelivery: false })}
-                          className={`flex-1 p-4 rounded-lg border-2 transition-all ${
+                          className={`p-6 border-2 transition-all duration-300 ${
                             !formData.needsDelivery
-                              ? 'border-rose-800 bg-rose-900/20'
-                              : 'border-zinc-700 hover:border-zinc-600'
+                              ? 'border-rose-800 bg-rose-50'
+                              : 'border-zinc-200 hover:border-zinc-400 bg-white'
                           }`}
                         >
-                          <div className="font-medium">Pickup</div>
-                          <div className="text-xs text-zinc-400 mt-1">I'll collect the cart</div>
+                          <div className="refined-body text-sm font-semibold text-zinc-900">Pickup</div>
+                          <div className="refined-body text-xs text-zinc-500 mt-1">I'll collect the cart</div>
                         </button>
                         <button
                           onClick={() => setFormData({ ...formData, needsDelivery: true })}
-                          className={`flex-1 p-4 rounded-lg border-2 transition-all ${
+                          className={`p-6 border-2 transition-all duration-300 ${
                             formData.needsDelivery
-                              ? 'border-rose-800 bg-rose-900/20'
-                              : 'border-zinc-700 hover:border-zinc-600'
+                              ? 'border-rose-800 bg-rose-50'
+                              : 'border-zinc-200 hover:border-zinc-400 bg-white'
                           }`}
                         >
-                          <div className="font-medium">Delivery</div>
-                          <div className="text-xs text-zinc-400 mt-1">Deliver to my address</div>
+                          <div className="refined-body text-sm font-semibold text-zinc-900">Delivery</div>
+                          <div className="refined-body text-xs text-zinc-500 mt-1">Deliver to my address</div>
                         </button>
                       </div>
                     </div>
@@ -441,7 +448,7 @@ export default function BookingPage() {
                               },
                             })
                           }
-                          className="bg-zinc-800 border-zinc-700 text-white"
+                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         />
                         <Input
                           placeholder="City *"
@@ -458,7 +465,7 @@ export default function BookingPage() {
                               },
                             })
                           }
-                          className="bg-zinc-800 border-zinc-700 text-white"
+                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         />
                         <Input
                           placeholder="Postal Code *"
@@ -475,10 +482,10 @@ export default function BookingPage() {
                               },
                             })
                           }
-                          className="bg-zinc-800 border-zinc-700 text-white"
+                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         />
                         {validationErrors.deliveryAddress && (
-                          <p className="text-red-400 text-sm">{validationErrors.deliveryAddress}</p>
+                          <p className="refined-body text-red-600 text-sm">{validationErrors.deliveryAddress}</p>
                         )}
                       </div>
                     ) : (
@@ -487,20 +494,20 @@ export default function BookingPage() {
                           placeholder="Pickup Location *"
                           value={formData.pickupLocation || ''}
                           onChange={(e) => setFormData({ ...formData, pickupLocation: e.target.value })}
-                          className="bg-zinc-800 border-zinc-700 text-white"
+                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         />
                         {validationErrors.pickupLocation && (
-                          <p className="text-red-400 text-sm mt-1">{validationErrors.pickupLocation}</p>
+                          <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.pickupLocation}</p>
                         )}
                       </div>
                     )}
 
                     <div>
-                      <Label className="text-zinc-400">Special Requests (Optional)</Label>
+                      <Label className="refined-body text-sm font-medium text-zinc-700 mb-2 block">Special Requests (Optional)</Label>
                       <Textarea
                         value={formData.specialRequests}
                         onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
-                        className="mt-2 bg-zinc-800 border-zinc-700 text-white"
+                        className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
                         placeholder="Any special requirements or notes..."
                         rows={4}
                       />
@@ -559,6 +566,8 @@ export default function BookingPage() {
                 selectedAddons={formData.selectedAddons}
                 deliveryAddress={formData.needsDelivery ? formData.deliveryAddress : null}
                 pickupLocation={!formData.needsDelivery ? formData.pickupLocation : null}
+                needsDelivery={formData.needsDelivery}
+                deliveryFee={50}
               />
             </div>
           )}

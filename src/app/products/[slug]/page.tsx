@@ -23,13 +23,13 @@ const translations = {
     technicalSpecs: 'Technical Specifications',
     customizeCart: 'Customise Your Cart',
     customizeDescription: 'Enhance your golf cart with premium add-ons and accessories.',
-    readyToOrder: 'Ready to Order?',
-    contactUs: 'Contact us today for viewings, quotes or to discuss your custom requirements.',
-    depositInfo: 'Secure your order with a $1,000 deposit • Delivery in approximately 6 weeks',
+    readyToOrder: 'Ready to Book?',
+    contactUs: 'Contact us today for rentals, quotes or to discuss your requirements.',
+    depositInfo: 'Flexible rental periods: Hourly, Daily, or Weekly',
     standardPackage: 'Standard Package',
     premiumPackage: 'Premium Package',
     ultimatePackage: 'Ultimate Package',
-    startingFrom: 'Starting from',
+    startingFrom: 'Rental from',
   },
   zh: {
     backToProducts: '返回所有产品',
@@ -39,13 +39,13 @@ const translations = {
     technicalSpecs: '技术规格',
     customizeCart: '定制您的球车',
     customizeDescription: '使用高级附加组件和配件增强您的高尔夫球车。',
-    readyToOrder: '准备订购？',
-    contactUs: '立即联系我们查看、报价或讨论您的定制需求。',
-    depositInfo: '以 $1,000 定金预订 • 大约 6 周内交付',
+    readyToOrder: '准备预订？',
+    contactUs: '立即联系我们了解租赁、报价或讨论您的需求。',
+    depositInfo: '灵活的租赁期限：按小时、按天或按周',
     standardPackage: '标准套餐',
     premiumPackage: '高级套餐',
     ultimatePackage: '旗舰套餐',
-    startingFrom: '起价',
+    startingFrom: '租赁起价',
   },
 }
 
@@ -211,7 +211,9 @@ export default function ProductPage({ params }: Props) {
 
                 {/* CTA Buttons */}
                 <div className="mt-8 space-y-4">
+                  {/* Purchase Option */}
                   <AddToCartButton product={product} />
+
                   <Link
                     href={`/quote?product=${product.slug}`}
                     className="block w-full rounded-sm px-8 py-3 text-center text-sm font-semibold text-white border-2 border-zinc-700 hover:border-rose-800 hover:bg-rose-900/20 transition-all uppercase tracking-wider"
