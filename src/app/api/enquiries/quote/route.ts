@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { sendQuoteReceivedToCustomer, sendQuoteReceivedToAdmin } from '@/lib/email/services/email-service'
+import { checkRateLimit, quoteRequestLimiter, createRateLimitResponse } from '@/lib/security/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit (5 quotes per hour per IP)
+    const rateLimitResult = await checkRateLimit(
+      request,
+      quoteRequestLimiter
+    );
+
+    if (!rateLimitResult.success) {
+      return createRateLimitResponse(
+        rateLimitResult,
+        'Too many quote requests. Please try again later.'
+      );
+    }
+
     const body = await request.json()
 
     // Validate required fields

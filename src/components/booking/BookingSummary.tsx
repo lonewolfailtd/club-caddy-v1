@@ -213,9 +213,9 @@ export default function BookingSummary({
 
             <div className="h-px bg-zinc-200" />
 
-            <div className="flex justify-between items-center p-4 bg-zinc-50 rounded-sm border border-zinc-200">
+            <div className="flex justify-between items-center p-6 bg-rose-50 border-2 border-rose-800">
               <span className="refined-title text-lg font-semibold text-zinc-900">Total</span>
-              <span className="refined-title text-2xl font-bold text-rose-900">
+              <span className="refined-title text-3xl font-bold text-rose-900">
                 ${grandTotal.toFixed(2)}
               </span>
             </div>

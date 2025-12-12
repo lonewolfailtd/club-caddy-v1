@@ -6,15 +6,18 @@ import type {
   CreateBookingResponse,
   RentalPricing,
 } from '@/types/booking.types';
+import { sanitizeError, sanitizeValidationError } from '@/lib/utils/error-handler';
+import { checkRateLimit, bookingCreationLimiter, createRateLimitResponse } from '@/lib/security/rate-limit';
+import { logBookingAction, getRequestMetadata, logSecurityEvent } from '@/lib/security/audit-logger';
 
 // Validation schemas
 const addressSchema = z.object({
   addressLine1: z.string().min(1, 'Address line 1 is required'),
   addressLine2: z.string().optional(),
-  city: z.string().min(1, 'City is required'),
+  city: z.string().optional(), // Optional for manually entered addresses
   state: z.string().optional(),
-  postalCode: z.string().min(1, 'Postal code is required'),
-  country: z.string().min(1, 'Country is required'),
+  postalCode: z.string().optional(), // Optional for manually entered addresses
+  country: z.string().optional().default('New Zealand'),
 });
 
 const addonSchema = z.object({
@@ -32,7 +35,13 @@ const bookingSchema = z.object({
   endDate: z.string().datetime('Invalid end date format'),
   customerName: z.string().min(2, 'Name must be at least 2 characters'),
   customerEmail: z.string().email('Invalid email address'),
-  customerPhone: z.string().min(10, 'Phone number must be at least 10 characters'),
+  customerPhone: z.string()
+    .min(1, 'Phone number is required')
+    .refine((phone) => {
+      // Strip non-digit characters and validate 9-11 digits (NZ phone format)
+      const digitsOnly = phone.replace(/\D/g, '');
+      return digitsOnly.length >= 9 && digitsOnly.length <= 11;
+    }, 'Phone number must be 9-11 digits'),
   selectedAddons: z.array(addonSchema).optional(),
   deliveryAddress: addressSchema.optional(),
   pickupLocation: z.string().optional(),
@@ -102,14 +111,47 @@ function calculatePricing(
  */
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit (3 bookings per hour per IP/user)
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const rateLimitResult = await checkRateLimit(
+      request,
+      bookingCreationLimiter,
+      user?.id
+    );
+
+    if (!rateLimitResult.success) {
+      // Log rate limit violation
+      await logSecurityEvent({
+        eventType: 'rate_limit_exceeded',
+        request,
+        userId: user?.id,
+        details: {
+          endpoint: '/api/bookings/create',
+          limit: rateLimitResult.limit,
+          reset: new Date(rateLimitResult.reset).toISOString(),
+        },
+      });
+
+      return createRateLimitResponse(
+        rateLimitResult,
+        'Too many booking requests. Please try again later.'
+      );
+    }
+
     const body: CreateBookingInput = await request.json();
 
     // Validate request body
     const validationResult = bookingSchema.safeParse(body);
     if (!validationResult.success) {
+      const sanitized = sanitizeValidationError(validationResult.error);
       return NextResponse.json(
-        { error: 'Invalid booking data', details: validationResult.error.issues },
-        { status: 400 }
+        {
+          error: sanitized.error,
+          ...(sanitized.fields && { fields: sanitized.fields })
+        },
+        { status: sanitized.status }
       );
     }
 
@@ -131,9 +173,6 @@ export async function POST(request: NextRequest) {
     const durationHours = Math.ceil(durationMs / (1000 * 60 * 60));
     const durationDays = Math.ceil(durationHours / 24);
 
-    // Create Supabase client
-    const supabase = await createClient();
-
     // Check availability first
     const { data: isAvailable, error: availError } = await (supabase as any).rpc('check_availability', {
       p_product_id: bookingData.productId,
@@ -143,10 +182,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (availError) {
-      console.error('Availability check error:', availError);
+      const sanitized = sanitizeError(availError, 'POST /api/bookings/create - availability check');
       return NextResponse.json(
-        { error: 'Failed to check availability' },
-        { status: 500 }
+        { error: sanitized.error },
+        { status: sanitized.status }
       );
     }
 
@@ -166,7 +205,13 @@ export async function POST(request: NextRequest) {
       .single<RentalPricing>();
 
     if (pricingError || !pricing) {
-      console.error('Pricing error:', pricingError);
+      if (pricingError) {
+        const sanitized = sanitizeError(pricingError, 'POST /api/bookings/create - pricing fetch');
+        return NextResponse.json(
+          { error: sanitized.error },
+          { status: sanitized.status }
+        );
+      }
       return NextResponse.json(
         { error: 'Rental pricing not configured for this product' },
         { status: 404 }
@@ -199,8 +244,7 @@ export async function POST(request: NextRequest) {
     const taxAmount = Math.round(subtotal * 0.15 * 100) / 100; // Round to 2 decimal places
     const totalAmount = subtotal + taxAmount;
 
-    // Get authenticated user if logged in
-    const { data: { user } } = await supabase.auth.getUser();
+    // Note: user is already available from line 110 (auth.getUser() for rate limiting)
 
     // Generate booking number
     const { data: bookingNumber, error: bookingNumError } = await supabase.rpc(
@@ -208,7 +252,13 @@ export async function POST(request: NextRequest) {
     );
 
     if (bookingNumError || !bookingNumber) {
-      console.error('Booking number generation error:', bookingNumError);
+      if (bookingNumError) {
+        const sanitized = sanitizeError(bookingNumError, 'POST /api/bookings/create - booking number generation');
+        return NextResponse.json(
+          { error: sanitized.error },
+          { status: sanitized.status }
+        );
+      }
       return NextResponse.json(
         { error: 'Failed to generate booking number' },
         { status: 500 }
@@ -247,12 +297,35 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (bookingError) {
-      console.error('Booking creation error:', bookingError);
+      // Log failed booking creation
+      await logBookingAction({
+        action: 'create',
+        booking: {
+          id: null,
+          customer_email: bookingData.customerEmail,
+          booking_number: bookingNumber,
+        },
+        request,
+        userId: user?.id,
+        success: false,
+        errorMessage: bookingError.message || 'Failed to create booking',
+      });
+
+      const sanitized = sanitizeError(bookingError, 'POST /api/bookings/create - booking insert');
       return NextResponse.json(
-        { error: 'Failed to create booking' },
-        { status: 500 }
+        { error: sanitized.error },
+        { status: sanitized.status }
       );
     }
+
+    // Log successful booking creation
+    await logBookingAction({
+      action: 'create',
+      booking,
+      request,
+      userId: user?.id,
+      success: true,
+    });
 
     return NextResponse.json<CreateBookingResponse>(
       {
@@ -262,8 +335,6 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Booking API error:', error);
-
     if (error instanceof SyntaxError) {
       return NextResponse.json(
         { error: 'Invalid JSON in request body' },
@@ -271,9 +342,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const sanitized = sanitizeError(error, 'POST /api/bookings/create');
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: sanitized.error },
+      { status: sanitized.status }
     );
   }
 }

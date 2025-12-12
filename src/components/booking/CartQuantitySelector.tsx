@@ -139,7 +139,7 @@ export default function CartQuantitySelector({
                   onChange={handleInputChange}
                   min={1}
                   max={maxQuantity}
-                  className="w-full px-4 py-3 bg-zinc-900 border-2 border-zinc-900 rounded-sm text-white text-center text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-rose-800"
+                  className="w-full px-4 py-3 bg-white border-2 border-zinc-200 rounded-sm text-zinc-900 text-center text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-rose-800"
                 />
               </div>
 
@@ -219,7 +219,7 @@ export default function CartQuantitySelector({
           )}
 
           {/* Price Per Cart Display */}
-          <div className="flex justify-between items-center p-4 bg-zinc-50 border border-zinc-200 rounded-sm">
+          <div className="flex justify-between items-center p-4 bg-white border-2 border-zinc-200 rounded-sm">
             <span className="refined-body text-zinc-600">Price per cart</span>
             <span className="refined-body text-xl font-bold text-zinc-900">
               ${unitPrice.toFixed(2)}

@@ -4,12 +4,20 @@ import { useEffect, useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import AccountCreationPrompt from '@/components/auth/AccountCreationPrompt'
+
+interface CustomerData {
+  fullName: string
+  email: string
+  phone: string
+}
 
 export default function CheckoutSuccessPage() {
   const { clearCart } = useCart()
   const router = useRouter()
   const [orderNumber, setOrderNumber] = useState('')
   const [showConfetti, setShowConfetti] = useState(true)
+  const [customerData, setCustomerData] = useState<CustomerData | null>(null)
 
   useEffect(() => {
     // Generate order number
@@ -18,6 +26,21 @@ export default function CheckoutSuccessPage() {
 
     // Clear cart on page load
     clearCart()
+
+    // Retrieve customer data from sessionStorage
+    if (typeof window !== 'undefined') {
+      const storedData = sessionStorage.getItem('purchaseCustomerData')
+      if (storedData) {
+        try {
+          const data = JSON.parse(storedData)
+          setCustomerData(data)
+          // Clear sessionStorage after reading
+          sessionStorage.removeItem('purchaseCustomerData')
+        } catch (err) {
+          console.error('Failed to parse customer data:', err)
+        }
+      }
+    }
 
     // Hide confetti after 5 seconds
     const timer = setTimeout(() => {
@@ -293,6 +316,15 @@ export default function CheckoutSuccessPage() {
             Contact Us
           </a>
         </div>
+
+        {/* Account Creation Prompt - Show if customer data is available */}
+        {customerData && (
+          <AccountCreationPrompt
+            customerName={customerData.fullName}
+            customerEmail={customerData.email}
+            customerPhone={customerData.phone}
+          />
+        )}
 
         {/* Social Media Sharing (Optional) */}
         <div className="mt-12 text-center">

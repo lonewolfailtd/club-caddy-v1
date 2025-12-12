@@ -427,11 +427,11 @@ export default function BookingCalendar({
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-6 bg-zinc-900 border-2 border-zinc-900"
+              className="p-6 bg-rose-50 border-2 border-rose-800"
             >
               <div className="flex justify-between items-center">
-                <span className="refined-body text-sm uppercase tracking-wider text-zinc-400">Estimated Price</span>
-                <span className="refined-title text-3xl font-bold text-white">
+                <span className="refined-body text-sm uppercase tracking-wider text-zinc-600">Estimated Price</span>
+                <span className="refined-title text-3xl font-bold text-rose-900">
                   ${calculatePrice(rentalType, startDate, rentalType === 'hourly' ? (() => {
                     const [h, m] = endTime.split(':').map(Number);
                     const d = new Date(startDate);
@@ -440,7 +440,7 @@ export default function BookingCalendar({
                   })() : endDate).toFixed(2)}
                 </span>
               </div>
-              <div className="refined-body text-xs text-zinc-500 mt-2">
+              <div className="refined-body text-xs text-zinc-600 mt-2">
                 {rentalType === 'hourly' && (() => {
                   const [sh, sm] = startTime.split(':').map(Number);
                   const [eh, em] = endTime.split(':').map(Number);

@@ -22,9 +22,12 @@ import {
   BookingConfirmationAdminEmail,
   BookingReminderEmail,
   BookingThankYouEmail,
+  DepositConfirmationEmail,
+  BalanceInvoiceEmail,
+  BalancePaidEmail,
 } from '../templates'
 
-const ADMIN_EMAIL = 'admin@clubcaddycarts.com'
+const ADMIN_EMAIL = 'contact@lonewolfaisolutions.com'
 
 // ============================================
 // AUTH EMAILS
@@ -192,18 +195,69 @@ export async function sendNewsletterWelcome(to: string, welcomeData: any) {
 // ============================================
 
 export async function sendBookingConfirmationEmail(bookingData: any) {
+  // Transform database fields (snake_case) to template props (camelCase)
+  const emailProps = {
+    bookingNumber: bookingData.booking_number,
+    customerName: bookingData.customer_name,
+    productName: bookingData.products?.name || 'Golf Cart',
+    productTier: bookingData.products?.tier || 'Standard',
+    quantity: bookingData.quantity,
+    rentalType: bookingData.rental_type,
+    startDate: new Date(bookingData.start_date),
+    endDate: new Date(bookingData.end_date),
+    durationHours: bookingData.duration_hours,
+    durationDays: bookingData.duration_days,
+    baseRate: bookingData.base_rate || 0,
+    addonTotal: bookingData.addon_total || 0,
+    subtotal: bookingData.subtotal || 0,
+    taxAmount: bookingData.tax_amount || 0,
+    totalAmount: bookingData.total_amount,
+    selectedAddons: bookingData.selected_addons || [],
+    deliveryAddress: bookingData.delivery_address,
+    pickupLocation: bookingData.pickup_location,
+    specialRequests: bookingData.special_requests,
+  };
+
   return sendEmail({
     to: bookingData.customer_email,
     subject: `Booking Confirmed #${bookingData.booking_number} - Club Caddy Carts`,
-    react: React.createElement(BookingConfirmationCustomerEmail, bookingData),
+    react: React.createElement(BookingConfirmationCustomerEmail, emailProps),
   })
 }
 
 export async function sendBookingConfirmationAdminEmail(bookingData: any) {
+  // Transform database fields (snake_case) to template props (camelCase)
+  const emailProps = {
+    bookingNumber: bookingData.booking_number,
+    bookingId: bookingData.id,
+    customerName: bookingData.customer_name,
+    customerEmail: bookingData.customer_email,
+    customerPhone: bookingData.customer_phone,
+    productName: bookingData.products?.name || 'Unknown Product',
+    productTier: bookingData.products?.tier || 'Standard',
+    quantity: bookingData.quantity,
+    rentalType: bookingData.rental_type,
+    startDate: new Date(bookingData.start_date),
+    endDate: new Date(bookingData.end_date),
+    durationHours: bookingData.duration_hours,
+    durationDays: bookingData.duration_days,
+    baseRate: bookingData.base_rate || 0,
+    addonTotal: bookingData.addon_total || 0,
+    subtotal: bookingData.subtotal || 0,
+    taxAmount: bookingData.tax_amount || 0,
+    totalAmount: bookingData.total_amount,
+    selectedAddons: bookingData.selected_addons || [],
+    deliveryAddress: bookingData.delivery_address,
+    pickupLocation: bookingData.pickup_location,
+    specialRequests: bookingData.special_requests,
+    stripePaymentIntentId: bookingData.stripe_payment_intent_id || 'N/A',
+    paidAt: new Date(bookingData.paid_at || bookingData.updated_at),
+  };
+
   return sendEmail({
     to: ADMIN_EMAIL,
     subject: `New Booking #${bookingData.booking_number} - Action Required`,
-    react: React.createElement(BookingConfirmationAdminEmail, bookingData),
+    react: React.createElement(BookingConfirmationAdminEmail, emailProps),
   })
 }
 
@@ -220,5 +274,63 @@ export async function sendBookingThankYou(bookingData: any) {
     to: bookingData.customer_email,
     subject: `Thank You for Choosing Club Caddy Carts! - Booking #${bookingData.booking_number}`,
     react: React.createElement(BookingThankYouEmail, bookingData),
+  })
+}
+
+// ============================================
+// ORDER PAYMENT EMAILS
+// ============================================
+
+export async function sendOrderDepositConfirmation(orderData: any) {
+  const emailProps = {
+    orderNumber: orderData.order_number,
+    customerName: orderData.customer_name,
+    depositAmount: orderData.deposit_amount,
+    balanceDue: orderData.balance_due,
+    totalAmount: orderData.total_amount,
+    items: orderData.items,
+    orderUrl: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${orderData.id}`,
+  };
+
+  return sendEmail({
+    to: orderData.customer_email,
+    subject: `Deposit Received - Order #${orderData.order_number} - Club Caddy Carts`,
+    react: React.createElement(DepositConfirmationEmail, emailProps),
+  })
+}
+
+export async function sendOrderBalanceInvoice(orderData: any) {
+  const emailProps = {
+    orderNumber: orderData.order_number,
+    customerName: orderData.customer_name,
+    depositAmount: orderData.deposit_amount,
+    balanceDue: orderData.balance_due,
+    totalAmount: orderData.total_amount,
+    items: orderData.items,
+    paymentLink: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${orderData.id}/pay-balance`,
+    shippingAddress: orderData.shipping_address,
+  };
+
+  return sendEmail({
+    to: orderData.customer_email,
+    subject: `Your Golf Cart is Ready! Final Payment Required - Order #${orderData.order_number}`,
+    react: React.createElement(BalanceInvoiceEmail, emailProps),
+  })
+}
+
+export async function sendOrderBalancePaid(orderData: any) {
+  const emailProps = {
+    orderNumber: orderData.order_number,
+    customerName: orderData.customer_name,
+    balanceAmount: orderData.balance_due,
+    totalPaid: orderData.total_amount,
+    orderUrl: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${orderData.id}`,
+    shippingAddress: orderData.shipping_address,
+  };
+
+  return sendEmail({
+    to: orderData.customer_email,
+    subject: `Payment Complete! Delivery Being Scheduled - Order #${orderData.order_number}`,
+    react: React.createElement(BalancePaidEmail, emailProps),
   })
 }

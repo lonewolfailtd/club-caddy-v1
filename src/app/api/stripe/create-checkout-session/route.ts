@@ -3,6 +3,7 @@ import { stripe, formatAmountForStripe } from '@/lib/stripe/client';
 import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 import type { CreateCheckoutSessionRequest, CreateCheckoutSessionResponse } from '@/types/booking.types';
+import { checkRateLimit, checkoutSessionLimiter, createRateLimitResponse } from '@/lib/security/rate-limit';
 
 const sessionSchema = z.object({
   bookingId: z.string().uuid('Invalid booking ID'),
@@ -14,6 +15,19 @@ const sessionSchema = z.object({
  */
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit (10 checkout sessions per 10 minutes)
+    const rateLimitResult = await checkRateLimit(
+      request,
+      checkoutSessionLimiter
+    );
+
+    if (!rateLimitResult.success) {
+      return createRateLimitResponse(
+        rateLimitResult,
+        'Too many payment attempts. Please try again later.'
+      );
+    }
+
     const body: CreateCheckoutSessionRequest = await request.json();
 
     // Validate request
@@ -85,6 +99,18 @@ export async function POST(request: NextRequest) {
       ? `${booking.duration_hours} hours`
       : `${booking.duration_days} ${booking.duration_days === 1 ? 'day' : 'days'}`;
 
+    // Convert relative image path to absolute URL for Stripe
+    let productImages: string[] = [];
+    if (booking.products.images?.[0]) {
+      const imageUrl = booking.products.images[0];
+      // If it's a relative path, make it absolute
+      if (imageUrl.startsWith('/')) {
+        productImages = [`${process.env.NEXT_PUBLIC_SITE_URL}${imageUrl}`];
+      } else if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        productImages = [imageUrl];
+      }
+    }
+
     // Prepare line items
     const lineItems: any[] = [
       {
@@ -93,7 +119,7 @@ export async function POST(request: NextRequest) {
           product_data: {
             name: `${booking.products.name} - ${booking.products.tier} Edition`,
             description: `${booking.quantity}x cart(s) • ${booking.rental_type} rental • ${durationText}\n${rentalPeriodText}`,
-            images: booking.products.images?.[0] ? [booking.products.images[0]] : [],
+            images: productImages,
             metadata: {
               productId: booking.product_id,
               tier: booking.products.tier,
@@ -104,6 +130,12 @@ export async function POST(request: NextRequest) {
         quantity: 1,
       },
     ];
+
+    // Pre-fill customer information from booking
+    const customerName = booking.customer_name || '';
+    const nameParts = customerName.split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -123,15 +155,29 @@ export async function POST(request: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/bookings/${booking.id}?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/bookings/${booking.id}?cancelled=true`,
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // 30 minutes
-      billing_address_collection: 'auto',
-      phone_number_collection: {
+      // Simplified checkout - only collect payment, no billing/shipping address
+      billing_address_collection: 'auto', // Only collect if required by payment method
+      // Pre-fill customer data
+      customer_creation: 'always',
+      invoice_creation: {
         enabled: true,
+        invoice_data: {
+          description: `Rental booking ${booking.booking_number}`,
+          footer: 'Thank you for choosing Club Caddy Carts!',
+          metadata: {
+            bookingNumber: booking.booking_number,
+          },
+        },
       },
       custom_text: {
         submit: {
           message: 'Your booking will be confirmed once payment is processed.',
         },
       },
+      // Custom branding to match Club Caddy theme
+      ui_mode: 'hosted', // Use Stripe's hosted checkout page
+      // Note: For full branding customization (logo, colors), configure in Stripe Dashboard > Settings > Branding
+      // The primary color (blue #0BA5EC) and accent colors will be applied there
     });
 
     // Update booking with Stripe session ID

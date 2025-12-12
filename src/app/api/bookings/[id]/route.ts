@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 import type { UpdateBookingInput, BookingWithProduct } from '@/types/booking.types';
+import { sanitizeError, sanitizeValidationError } from '@/lib/utils/error-handler';
+import { logBookingAction, logAdminAction, getRequestMetadata } from '@/lib/security/audit-logger';
 
 const updateSchema = z.object({
   status: z.enum(['pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show', 'requires_action']).optional(),
@@ -34,7 +36,11 @@ export async function GET(
 
     const supabase = await createClient();
 
-    const { data: booking, error } = await supabase
+    // Get authenticated user (if any)
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Build query with authorization
+    let query = supabase
       .from('bookings')
       .select(`
         *,
@@ -48,23 +54,37 @@ export async function GET(
           category
         )
       `)
-      .eq('id', bookingId)
-      .single<BookingWithProduct>();
+      .eq('id', bookingId);
+
+    // If user is authenticated, apply authorization filters
+    if (user) {
+      // Check if user is admin
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', user.id)
+        .single();
+
+      // Non-admin users can only see their own bookings
+      if (!profile?.is_admin) {
+        query = query.or(`user_id.eq.${user.id},customer_email.eq.${user.email}`);
+      }
+      // Admins can see all bookings (no filter applied)
+    } else {
+      // Unauthenticated users cannot access booking details
+      return NextResponse.json(
+        { error: 'Authentication required to view booking details' },
+        { status: 401 }
+      );
+    }
+
+    const { data: booking, error } = await query.single<BookingWithProduct>();
 
     if (error) {
-      console.error('Booking fetch error:', error);
-
-      // Check if it's a "not found" error
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'Booking not found' },
-          { status: 404 }
-        );
-      }
-
+      const sanitized = sanitizeError(error, 'GET /api/bookings/[id]');
       return NextResponse.json(
-        { error: 'Failed to retrieve booking' },
-        { status: 500 }
+        { error: sanitized.error },
+        { status: sanitized.status }
       );
     }
 
@@ -77,10 +97,10 @@ export async function GET(
 
     return NextResponse.json({ booking });
   } catch (error) {
-    console.error('Booking retrieval error:', error);
+    const sanitized = sanitizeError(error, 'GET /api/bookings/[id]');
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: sanitized.error },
+      { status: sanitized.status }
     );
   }
 }
@@ -111,9 +131,13 @@ export async function PATCH(
     // Validate request body
     const validationResult = updateSchema.safeParse(body);
     if (!validationResult.success) {
+      const sanitized = sanitizeValidationError(validationResult.error);
       return NextResponse.json(
-        { error: 'Invalid request data', details: validationResult.error.issues },
-        { status: 400 }
+        {
+          error: sanitized.error,
+          ...(sanitized.fields && { fields: sanitized.fields })
+        },
+        { status: sanitized.status }
       );
     }
 
@@ -125,6 +149,16 @@ export async function PATCH(
     }
 
     const supabase = await createClient();
+
+    // Get authenticated user
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Fetch old booking data for audit log
+    const { data: oldBooking } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('id', bookingId)
+      .single();
 
     // Prepare update object
     const updateData: any = { ...updates };
@@ -143,36 +177,33 @@ export async function PATCH(
       .single();
 
     if (error) {
-      console.error('Booking update error:', error);
-
-      // Check if it's a "not found" error or permission denied
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'Booking not found' },
-          { status: 404 }
-        );
-      }
-
-      if (error.code === '42501') {
-        return NextResponse.json(
-          { error: 'Permission denied' },
-          { status: 403 }
-        );
-      }
-
+      const sanitized = sanitizeError(error, 'PATCH /api/bookings/[id]');
       return NextResponse.json(
-        { error: 'Failed to update booking' },
-        { status: 500 }
+        { error: sanitized.error },
+        { status: sanitized.status }
       );
     }
+
+    // Log booking update
+    await logBookingAction({
+      action: 'update',
+      booking,
+      request,
+      userId: user?.id,
+      oldValues: oldBooking ? {
+        status: oldBooking.status,
+        payment_status: oldBooking.payment_status,
+        special_requests: oldBooking.special_requests,
+        admin_notes: oldBooking.admin_notes,
+      } : undefined,
+      success: true,
+    });
 
     return NextResponse.json({
       booking,
       message: 'Booking updated successfully',
     });
   } catch (error) {
-    console.error('Booking update error:', error);
-
     if (error instanceof SyntaxError) {
       return NextResponse.json(
         { error: 'Invalid JSON in request body' },
@@ -180,9 +211,10 @@ export async function PATCH(
       );
     }
 
+    const sanitized = sanitizeError(error, 'PATCH /api/bookings/[id]');
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: sanitized.error },
+      { status: sanitized.status }
     );
   }
 }
@@ -233,32 +265,57 @@ export async function DELETE(
       );
     }
 
+    // Fetch booking before cancellation for audit log
+    const { data: oldBooking } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('id', bookingId)
+      .single();
+
     // Instead of deleting, cancel the booking
-    const { error } = await (supabase
+    const { data: cancelledBooking, error } = await (supabase
       .from('bookings') as any)
       .update({
         status: 'cancelled',
         cancelled_at: new Date().toISOString(),
         cancellation_reason: 'Cancelled by admin',
       })
-      .eq('id', bookingId);
+      .eq('id', bookingId)
+      .select()
+      .single();
 
     if (error) {
-      console.error('Booking cancellation error:', error);
+      const sanitized = sanitizeError(error, 'DELETE /api/bookings/[id]');
       return NextResponse.json(
-        { error: 'Failed to cancel booking' },
-        { status: 500 }
+        { error: sanitized.error },
+        { status: sanitized.status }
       );
     }
+
+    // Log admin cancellation
+    await logAdminAction({
+      action: 'delete',
+      resourceType: 'booking',
+      resourceId: bookingId,
+      request,
+      userId: user.id,
+      userEmail: user.email || 'unknown',
+      details: {
+        booking_number: cancelledBooking?.booking_number || oldBooking?.booking_number,
+        old_status: oldBooking?.status,
+        new_status: 'cancelled',
+        cancellation_reason: 'Cancelled by admin',
+      },
+    });
 
     return NextResponse.json({
       message: 'Booking cancelled successfully',
     });
   } catch (error) {
-    console.error('Booking deletion error:', error);
+    const sanitized = sanitizeError(error, 'DELETE /api/bookings/[id]');
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: sanitized.error },
+      { status: sanitized.status }
     );
   }
 }

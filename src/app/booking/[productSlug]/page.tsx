@@ -14,6 +14,7 @@ import { Card } from '@/components/ui/card';
 import BookingCalendar from '@/components/booking/BookingCalendar';
 import CartQuantitySelector from '@/components/booking/CartQuantitySelector';
 import BookingSummary from '@/components/booking/BookingSummary';
+import AddressAutocomplete, { type AddressComponents } from '@/components/maps/AddressAutocomplete';
 import type {
   RentalType,
   BookingAddon,
@@ -165,11 +166,35 @@ export default function BookingPage() {
     // Validate form
     const errors: Record<string, string> = {};
 
+    // Date validation
     if (!formData.startDate) errors.startDate = 'Please select a start date';
     if (!formData.endDate) errors.endDate = 'Please select an end date';
-    if (!formData.customerName.trim()) errors.customerName = 'Name is required';
-    if (!formData.customerEmail.trim()) errors.customerEmail = 'Email is required';
-    if (!formData.customerPhone.trim()) errors.customerPhone = 'Phone is required';
+
+    // Name validation
+    if (!formData.customerName.trim()) {
+      errors.customerName = 'Name is required';
+    }
+
+    // Email validation
+    if (!formData.customerEmail.trim()) {
+      errors.customerEmail = 'Email is required';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.customerEmail)) {
+        errors.customerEmail = 'Please enter a valid email address';
+      }
+    }
+
+    // Phone number validation (9, 10, or 11 digits)
+    if (!formData.customerPhone.trim()) {
+      errors.customerPhone = 'Phone number is required';
+    } else {
+      // Remove all non-digit characters for validation
+      const digitsOnly = formData.customerPhone.replace(/\D/g, '');
+      if (digitsOnly.length < 9 || digitsOnly.length > 11) {
+        errors.customerPhone = 'Phone number must be 9-11 digits';
+      }
+    }
 
     if (formData.needsDelivery && !formData.deliveryAddress?.addressLine1) {
       errors.deliveryAddress = 'Delivery address is required';
@@ -368,7 +393,7 @@ export default function BookingPage() {
                         value={formData.customerName}
                         onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
                         className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
-                        placeholder="John Smith"
+                        placeholder="Name"
                       />
                       {validationErrors.customerName && (
                         <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.customerName}</p>
@@ -382,7 +407,7 @@ export default function BookingPage() {
                         value={formData.customerEmail}
                         onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
                         className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
-                        placeholder="john@example.com"
+                        placeholder="Email"
                       />
                       {validationErrors.customerEmail && (
                         <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.customerEmail}</p>
@@ -396,7 +421,7 @@ export default function BookingPage() {
                         value={formData.customerPhone}
                         onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
                         className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
-                        placeholder="+64 21 234 5678"
+                        placeholder="Phone number"
                       />
                       {validationErrors.customerPhone && (
                         <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.customerPhone}</p>
@@ -433,71 +458,84 @@ export default function BookingPage() {
 
                     {formData.needsDelivery ? (
                       <div className="space-y-4">
-                        <Input
-                          placeholder="Address Line 1 *"
-                          value={formData.deliveryAddress?.addressLine1 || ''}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
+                        <AddressAutocomplete
+                          onAddressSelect={(address: AddressComponents) => {
+                            setFormData(prev => ({
+                              ...prev,
                               deliveryAddress: {
-                                ...formData.deliveryAddress!,
-                                addressLine1: e.target.value,
-                                city: formData.deliveryAddress?.city || '',
-                                postalCode: formData.deliveryAddress?.postalCode || '',
-                                country: 'New Zealand',
+                                addressLine1: address.addressLine1,
+                                city: address.city,
+                                postalCode: address.postalCode,
+                                country: address.country || 'New Zealand',
                               },
-                            })
-                          }
-                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
-                        />
-                        <Input
-                          placeholder="City *"
-                          value={formData.deliveryAddress?.city || ''}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
+                            }));
+                          }}
+                          onManualInput={(value: string) => {
+                            // Preserve manually typed values even if not selected from dropdown
+                            setFormData(prev => ({
+                              ...prev,
                               deliveryAddress: {
-                                ...formData.deliveryAddress!,
-                                addressLine1: formData.deliveryAddress?.addressLine1 || '',
-                                city: e.target.value,
-                                postalCode: formData.deliveryAddress?.postalCode || '',
-                                country: 'New Zealand',
+                                addressLine1: value,
+                                city: prev.deliveryAddress?.city || '',
+                                postalCode: prev.deliveryAddress?.postalCode || '',
+                                country: prev.deliveryAddress?.country || 'New Zealand',
                               },
-                            })
-                          }
-                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
+                            }));
+                          }}
+                          initialValue={formData.deliveryAddress?.addressLine1 || ''}
+                          error={validationErrors.deliveryAddress}
+                          label="Delivery Address"
+                          placeholder="Start typing your address..."
+                          required={true}
                         />
-                        <Input
-                          placeholder="Postal Code *"
-                          value={formData.deliveryAddress?.postalCode || ''}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              deliveryAddress: {
-                                ...formData.deliveryAddress!,
-                                addressLine1: formData.deliveryAddress?.addressLine1 || '',
-                                city: formData.deliveryAddress?.city || '',
-                                postalCode: e.target.value,
-                                country: 'New Zealand',
-                              },
-                            })
-                          }
-                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
-                        />
-                        {validationErrors.deliveryAddress && (
-                          <p className="refined-body text-red-600 text-sm">{validationErrors.deliveryAddress}</p>
+
+                        {/* Show selected address details */}
+                        {formData.deliveryAddress?.addressLine1 && (
+                          <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-sm">
+                            <p className="refined-body text-xs text-zinc-500 uppercase tracking-wider mb-2">Selected Address</p>
+                            <p className="refined-body text-sm text-zinc-900 font-medium">
+                              {formData.deliveryAddress.addressLine1}
+                            </p>
+                            <p className="refined-body text-sm text-zinc-700">
+                              {formData.deliveryAddress.city} {formData.deliveryAddress.postalCode}
+                            </p>
+                          </div>
                         )}
                       </div>
                     ) : (
-                      <div>
-                        <Input
-                          placeholder="Pickup Location *"
-                          value={formData.pickupLocation || ''}
-                          onChange={(e) => setFormData({ ...formData, pickupLocation: e.target.value })}
-                          className="refined-body bg-white border-2 border-zinc-200 text-zinc-900 focus:border-rose-800 focus:ring-0"
+                      <div className="space-y-4">
+                        <AddressAutocomplete
+                          onAddressSelect={(address: AddressComponents) => {
+                            // Use formatted address or construct from components
+                            const fullAddress = address.formattedAddress ||
+                              `${address.addressLine1}, ${address.city} ${address.postalCode}`;
+                            setFormData(prev => ({
+                              ...prev,
+                              pickupLocation: fullAddress,
+                            }));
+                          }}
+                          onManualInput={(value: string) => {
+                            // Preserve manually typed pickup location
+                            setFormData(prev => ({
+                              ...prev,
+                              pickupLocation: value,
+                            }));
+                          }}
+                          initialValue={formData.pickupLocation || ''}
+                          error={validationErrors.pickupLocation}
+                          label="Pickup Location"
+                          placeholder="Start typing your pickup address..."
+                          required={true}
                         />
-                        {validationErrors.pickupLocation && (
-                          <p className="refined-body text-red-600 text-sm mt-1">{validationErrors.pickupLocation}</p>
+
+                        {/* Show selected pickup location */}
+                        {formData.pickupLocation && (
+                          <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-sm">
+                            <p className="refined-body text-xs text-zinc-500 uppercase tracking-wider mb-2">Selected Pickup Location</p>
+                            <p className="refined-body text-sm text-zinc-900 font-medium">
+                              {formData.pickupLocation}
+                            </p>
+                          </div>
                         )}
                       </div>
                     )}

@@ -22,7 +22,7 @@ export async function sendEmail({
   bcc,
 }: SendEmailOptions) {
   try {
-    const html = await render(react)
+    const html = await render(react, { pretty: false })
 
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
@@ -56,7 +56,7 @@ export async function sendBatchEmails(emails: SendEmailOptions[]) {
       from: FROM_EMAIL,
       to: Array.isArray(email.to) ? email.to : [email.to],
       subject: email.subject,
-      html: await render(email.react),
+      html: await render(email.react, { pretty: false }),
       replyTo: email.replyTo,
       cc: email.cc ? (Array.isArray(email.cc) ? email.cc : [email.cc]) : undefined,
       bcc: email.bcc ? (Array.isArray(email.bcc) ? email.bcc : [email.bcc]) : undefined,

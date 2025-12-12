@@ -30,3 +30,8 @@ export { BookingConfirmationCustomerEmail } from './bookings/booking-confirmatio
 export { BookingConfirmationAdminEmail } from './bookings/booking-confirmation-admin'
 export { BookingReminderEmail } from './bookings/booking-reminder'
 export { BookingThankYouEmail } from './bookings/booking-thank-you'
+
+// Order Payment Templates
+export { DepositConfirmationEmail } from './orders/deposit-confirmation'
+export { BalanceInvoiceEmail } from './orders/balance-invoice'
+export { BalancePaidEmail } from './orders/balance-paid'

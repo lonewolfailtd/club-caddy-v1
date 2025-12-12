@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 import type { CheckAvailabilityRequest, CheckAvailabilityResponse } from '@/types/booking.types';
+import { checkRateLimit, availabilityCheckLimiter, createRateLimitResponse } from '@/lib/security/rate-limit';
 
 // Validation schema
 const availabilitySchema = z.object({
@@ -17,6 +18,19 @@ const availabilitySchema = z.object({
  */
 export async function POST(request: NextRequest) {
   try {
+    // Check rate limit (30 checks per minute)
+    const rateLimitResult = await checkRateLimit(
+      request,
+      availabilityCheckLimiter
+    );
+
+    if (!rateLimitResult.success) {
+      return createRateLimitResponse(
+        rateLimitResult,
+        'Too many availability checks. Please slow down.'
+      );
+    }
+
     const body: CheckAvailabilityRequest = await request.json();
 
     // Validate request body

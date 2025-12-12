@@ -5,6 +5,7 @@ import { formatPrice } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import AddressAutocomplete, { type AddressComponents } from '@/components/maps/AddressAutocomplete'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -74,8 +75,12 @@ export default function CheckoutPage() {
 
     if (!formData.phone.trim()) {
       errors.phone = 'Phone number is required'
-    } else if (!/^[\d\s\-\+\(\)]+$/.test(formData.phone)) {
-      errors.phone = 'Please enter a valid phone number'
+    } else {
+      // Remove all non-digit characters for validation
+      const digitsOnly = formData.phone.replace(/\D/g, '')
+      if (digitsOnly.length < 9 || digitsOnly.length > 11) {
+        errors.phone = 'Phone number must be 9-11 digits'
+      }
     }
 
     if (!formData.addressLine1.trim()) {
@@ -116,25 +121,59 @@ export default function CheckoutPage() {
     setIsSubmitting(true)
 
     try {
-      // In production, this would send the order to your backend/API
-      // For now, we'll simulate a successful order
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Calculate cart items for API
+      const items = cart.items.map(item => ({
+        productName: item.productName,
+        variantName: item.variantName,
+        quantity: item.quantity,
+        basePrice: item.basePrice,
+        selectedAddons: item.selectedAddons,
+        imageUrl: item.imageUrl,
+        total: (item.basePrice + (item.selectedAddons?.reduce((sum, addon) => sum + addon.price, 0) || 0)) * item.quantity
+      }))
 
-      // Show success message
-      alert(
-        `Order Confirmed!\n\n` +
-        `Thank you ${formData.fullName}!\n\n` +
-        `Order Details:\n` +
-        `Items: ${cart.totalItems}\n` +
-        `Total: ${formatPrice(cart.subtotal)}\n\n` +
-        `A confirmation email will be sent to ${formData.email}\n\n` +
-        `Estimated delivery: 6 weeks\n` +
-        `We'll contact you at ${formData.phone} to arrange delivery.`
-      )
+      // Create deposit checkout session
+      const response = await fetch('/api/orders/create-deposit-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          shippingAddress: {
+            addressLine1: formData.addressLine1,
+            addressLine2: formData.addressLine2,
+            city: formData.city,
+            postalCode: formData.postalCode,
+            region: formData.region,
+            country: formData.country,
+          },
+          specialInstructions: formData.specialInstructions,
+          items,
+          subtotal: cart.subtotal, // in cents
+        }),
+      })
 
-      // Clear cart and redirect
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { url, orderId } = await response.json()
+
+      // Store customer data for account creation prompt (on success page)
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('purchaseCustomerData', JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          orderId,
+          timestamp: Date.now()
+        }))
+      }
+
+      // Clear cart and redirect to Stripe checkout
       clearCart()
-      router.push('/')
+      window.location.href = url
     } catch (error) {
       alert('There was an error processing your order. Please try again.')
       console.error('Order error:', error)
@@ -189,7 +228,7 @@ export default function CheckoutPage() {
                         value={formData.fullName}
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
                         className={`mt-2 ${formErrors.fullName ? 'border-error' : ''}`}
-                        placeholder="John Smith"
+                        placeholder="Name"
                       />
                       {formErrors.fullName && (
                         <p className="mt-1 text-sm text-error">{formErrors.fullName}</p>
@@ -209,7 +248,7 @@ export default function CheckoutPage() {
                           value={formData.email}
                           onChange={(e) => handleInputChange('email', e.target.value)}
                           className={`mt-2 ${formErrors.email ? 'border-error' : ''}`}
-                          placeholder="john@example.com"
+                          placeholder="Email"
                         />
                         {formErrors.email && (
                           <p className="mt-1 text-sm text-error">{formErrors.email}</p>
@@ -228,7 +267,7 @@ export default function CheckoutPage() {
                           value={formData.phone}
                           onChange={(e) => handleInputChange('phone', e.target.value)}
                           className={`mt-2 ${formErrors.phone ? 'border-error' : ''}`}
-                          placeholder="+64 21 123 4567"
+                          placeholder="Phone number"
                         />
                         {formErrors.phone && (
                           <p className="mt-1 text-sm text-error">{formErrors.phone}</p>
@@ -245,26 +284,57 @@ export default function CheckoutPage() {
                   </h2>
 
                   <div className="space-y-6">
-                    {/* Address Line 1 */}
-                    <div>
-                      <Label htmlFor="addressLine1" className="text-luxury-onyx">
-                        Address Line 1 <span className="text-error">*</span>
-                      </Label>
-                      <Input
-                        id="addressLine1"
-                        type="text"
-                        required
-                        value={formData.addressLine1}
-                        onChange={(e) => handleInputChange('addressLine1', e.target.value)}
-                        className={`mt-2 ${formErrors.addressLine1 ? 'border-error' : ''}`}
-                        placeholder="123 Main Street"
-                      />
-                      {formErrors.addressLine1 && (
-                        <p className="mt-1 text-sm text-error">{formErrors.addressLine1}</p>
-                      )}
-                    </div>
+                    {/* Google Places Address Autocomplete */}
+                    <AddressAutocomplete
+                      onAddressSelect={(address: AddressComponents) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          addressLine1: address.addressLine1,
+                          city: address.city,
+                          postalCode: address.postalCode,
+                          region: address.city, // Use city as region for NZ
+                          country: address.country || 'New Zealand',
+                        }));
+                        // Clear address errors
+                        setFormErrors(prev => ({
+                          ...prev,
+                          addressLine1: undefined,
+                          city: undefined,
+                          postalCode: undefined,
+                          region: undefined,
+                        }));
+                      }}
+                      onManualInput={(value: string) => {
+                        // Preserve manually typed values even if not selected from dropdown
+                        setFormData(prev => ({
+                          ...prev,
+                          addressLine1: value,
+                        }));
+                      }}
+                      initialValue={formData.addressLine1}
+                      error={formErrors.addressLine1}
+                      label="Shipping Address"
+                      placeholder="Start typing your address..."
+                      required={true}
+                    />
 
-                    {/* Address Line 2 */}
+                    {/* Show selected address details */}
+                    {formData.addressLine1 && (
+                      <div className="p-4 bg-gray-50 border border-gray-200 rounded-sm">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Selected Shipping Address</p>
+                        <p className="text-sm text-luxury-onyx font-medium">
+                          {formData.addressLine1}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          {formData.city} {formData.postalCode}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {formData.country}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Address Line 2 - Optional */}
                     <div>
                       <Label htmlFor="addressLine2" className="text-luxury-onyx">
                         Address Line 2 <span className="text-gray-400">(Optional)</span>
@@ -277,82 +347,6 @@ export default function CheckoutPage() {
                         className="mt-2"
                         placeholder="Apartment, suite, etc."
                       />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      {/* City */}
-                      <div>
-                        <Label htmlFor="city" className="text-luxury-onyx">
-                          City <span className="text-error">*</span>
-                        </Label>
-                        <Input
-                          id="city"
-                          type="text"
-                          required
-                          value={formData.city}
-                          onChange={(e) => handleInputChange('city', e.target.value)}
-                          className={`mt-2 ${formErrors.city ? 'border-error' : ''}`}
-                          placeholder="Auckland"
-                        />
-                        {formErrors.city && (
-                          <p className="mt-1 text-sm text-error">{formErrors.city}</p>
-                        )}
-                      </div>
-
-                      {/* Postal Code */}
-                      <div>
-                        <Label htmlFor="postalCode" className="text-luxury-onyx">
-                          Postal Code <span className="text-error">*</span>
-                        </Label>
-                        <Input
-                          id="postalCode"
-                          type="text"
-                          required
-                          value={formData.postalCode}
-                          onChange={(e) => handleInputChange('postalCode', e.target.value)}
-                          className={`mt-2 ${formErrors.postalCode ? 'border-error' : ''}`}
-                          placeholder="1010"
-                        />
-                        {formErrors.postalCode && (
-                          <p className="mt-1 text-sm text-error">{formErrors.postalCode}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      {/* Region/State */}
-                      <div>
-                        <Label htmlFor="region" className="text-luxury-onyx">
-                          Region/State <span className="text-error">*</span>
-                        </Label>
-                        <Input
-                          id="region"
-                          type="text"
-                          required
-                          value={formData.region}
-                          onChange={(e) => handleInputChange('region', e.target.value)}
-                          className={`mt-2 ${formErrors.region ? 'border-error' : ''}`}
-                          placeholder="Auckland"
-                        />
-                        {formErrors.region && (
-                          <p className="mt-1 text-sm text-error">{formErrors.region}</p>
-                        )}
-                      </div>
-
-                      {/* Country */}
-                      <div>
-                        <Label htmlFor="country" className="text-luxury-onyx">
-                          Country
-                        </Label>
-                        <Input
-                          id="country"
-                          type="text"
-                          value={formData.country}
-                          onChange={(e) => handleInputChange('country', e.target.value)}
-                          className="mt-2 bg-gray-50"
-                          readOnly
-                        />
-                      </div>
                     </div>
 
                     {/* Special Instructions */}

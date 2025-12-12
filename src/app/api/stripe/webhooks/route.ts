@@ -5,8 +5,11 @@ import type Stripe from 'stripe';
 import {
   sendBookingConfirmationEmail,
   sendBookingConfirmationAdminEmail,
+  sendOrderDepositConfirmation,
+  sendOrderBalancePaid,
 } from '@/lib/email/services/email-service';
 import type { BookingWithProduct } from '@/types/booking.types';
+import { logPaymentAction, getRequestMetadata } from '@/lib/security/audit-logger';
 
 // Use service role key for webhook handlers to bypass RLS
 const supabaseAdmin = createClient(
@@ -44,7 +47,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = await stripe.webhooks.constructEventAsync(
       body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
@@ -88,7 +91,7 @@ export async function POST(request: NextRequest) {
           } else {
             console.log(`Booking ${bookingId} marked as paid and confirmed`);
 
-            // Fetch booking details for email
+            // Fetch booking details for email and audit logging
             const { data: booking, error: fetchError } = await supabaseAdmin
               .from('bookings')
               .select(`
@@ -101,6 +104,18 @@ export async function POST(request: NextRequest) {
               `)
               .eq('id', bookingId)
               .single();
+
+            // Log successful payment
+            if (booking) {
+              await logPaymentAction({
+                action: 'payment',
+                booking,
+                paymentIntentId: session.payment_intent as string,
+                amount: booking.total_amount,
+                request,
+                success: true,
+              });
+            }
 
             if (fetchError) {
               console.error('Failed to fetch booking for email:', fetchError);
@@ -142,6 +157,73 @@ export async function POST(request: NextRequest) {
             }
           }
         }
+
+        // Handle order deposit/balance payments
+        const orderId = session.metadata?.order_id;
+        const paymentType = session.metadata?.payment_type; // 'deposit' or 'balance'
+
+        if (orderId && paymentType) {
+          console.log(`Processing ${paymentType} payment for order: ${orderId}`);
+
+          const updates: any = {
+            updated_at: new Date().toISOString(),
+          };
+
+          if (paymentType === 'deposit') {
+            updates.payment_status = 'deposit_paid';
+            updates.order_status = 'processing';
+            updates.deposit_payment_intent_id = session.payment_intent as string;
+            updates.deposit_paid_at = new Date().toISOString();
+          } else if (paymentType === 'balance') {
+            updates.payment_status = 'paid';
+            updates.order_status = 'ready';
+            updates.balance_payment_intent_id = session.payment_intent as string;
+            updates.balance_paid_at = new Date().toISOString();
+          }
+
+          const { error: updateError } = await supabaseAdmin
+            .from('orders')
+            .update(updates)
+            .eq('id', orderId);
+
+          if (updateError) {
+            console.error(`Failed to update order ${paymentType} payment:`, updateError);
+          } else {
+            console.log(`Order ${orderId} ${paymentType} payment processed successfully`);
+
+            // Fetch order details for email
+            const { data: order } = await supabaseAdmin
+              .from('orders')
+              .select('*')
+              .eq('id', orderId)
+              .single();
+
+            if (order) {
+              console.log(`Order ${order.order_number} - ${paymentType} payment confirmed`);
+
+              try {
+                if (paymentType === 'deposit') {
+                  const emailResult = await sendOrderDepositConfirmation(order);
+                  if (emailResult.success) {
+                    console.log(`Deposit confirmation email sent to ${order.customer_email}`);
+                  } else {
+                    console.error('Failed to send deposit confirmation:', emailResult.error);
+                  }
+                } else if (paymentType === 'balance') {
+                  const emailResult = await sendOrderBalancePaid(order);
+                  if (emailResult.success) {
+                    console.log(`Balance paid email sent to ${order.customer_email}`);
+                  } else {
+                    console.error('Failed to send balance paid email:', emailResult.error);
+                  }
+                }
+              } catch (emailError) {
+                console.error(`Error sending order ${paymentType} email:`, emailError);
+                // Don't fail the webhook if email sending fails
+              }
+            }
+          }
+        }
         break;
       }
 
@@ -162,6 +244,26 @@ export async function POST(request: NextRequest) {
           console.error('Failed to update booking payment status to failed:', updateError);
         } else {
           console.log(`Booking marked as payment failed for intent ${paymentIntent.id}`);
+
+          // Fetch booking for audit log
+          const { data: booking } = await supabaseAdmin
+            .from('bookings')
+            .select('*')
+            .eq('stripe_payment_intent_id', paymentIntent.id)
+            .single();
+
+          if (booking) {
+            // Log failed payment
+            await logPaymentAction({
+              action: 'payment',
+              booking,
+              paymentIntentId: paymentIntent.id,
+              amount: booking.total_amount,
+              request,
+              success: false,
+              errorMessage: paymentIntent.last_payment_error?.message || 'Payment failed',
+            });
+          }
         }
         break;
       }
@@ -192,6 +294,25 @@ export async function POST(request: NextRequest) {
           console.log(
             `Booking marked as ${refundStatus} and cancelled for charge ${charge.id}`
           );
+
+          // Fetch booking for audit log
+          const { data: booking } = await supabaseAdmin
+            .from('bookings')
+            .select('*')
+            .eq('stripe_payment_intent_id', charge.payment_intent as string)
+            .single();
+
+          if (booking) {
+            // Log refund
+            await logPaymentAction({
+              action: 'refund',
+              booking,
+              paymentIntentId: charge.payment_intent as string,
+              amount: charge.amount_refunded / 100, // Convert from cents
+              request,
+              success: true,
+            });
+          }
         }
         break;
       }
@@ -237,4 +358,5 @@ export async function POST(request: NextRequest) {
 }
 
 // Disable body parsing for Stripe webhooks (need raw body for signature verification)
-export const runtime = 'edge'; // Optional: Use edge runtime for better performance
+// Use Node.js runtime for React Email rendering support
+export const runtime = 'nodejs';
