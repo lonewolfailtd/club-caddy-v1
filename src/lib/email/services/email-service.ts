@@ -1,5 +1,6 @@
 import { sendEmail } from '../send'
 import * as React from 'react'
+import { renderToBuffer } from '@react-pdf/renderer'
 import {
   WelcomeEmail,
   PasswordResetEmail,
@@ -26,6 +27,7 @@ import {
   BalanceInvoiceEmail,
   BalancePaidEmail,
 } from '../templates'
+import { DepositInvoicePDF } from '../templates/orders/deposit-invoice-pdf'
 
 const ADMIN_EMAIL = 'contact@lonewolfaisolutions.com'
 
@@ -288,15 +290,71 @@ export async function sendOrderDepositConfirmation(orderData: any) {
     depositAmount: orderData.deposit_amount,
     balanceDue: orderData.balance_due,
     totalAmount: orderData.total_amount,
+    subtotal: orderData.subtotal,
+    deliveryCost: orderData.delivery_cost || 0,
+    deliveryMethod: orderData.delivery_method || 'delivery',
     items: orderData.items,
     orderUrl: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${orderData.id}`,
   };
 
-  return sendEmail({
-    to: orderData.customer_email,
-    subject: `Deposit Received - Order #${orderData.order_number} - Club Caddy Carts`,
-    react: React.createElement(DepositConfirmationEmail, emailProps),
-  })
+  // Format shipping address as string for PDF
+  const formatShippingAddress = (address: any) => {
+    if (!address) return null;
+    const parts = [
+      address.addressLine1,
+      address.addressLine2,
+      `${address.city} ${address.postalCode}`,
+      address.region,
+      address.country
+    ].filter(Boolean);
+    return parts.join(', ');
+  };
+
+  // Generate PDF invoice
+  const pdfProps = {
+    orderNumber: orderData.order_number,
+    customerName: orderData.customer_name,
+    customerEmail: orderData.customer_email,
+    customerPhone: orderData.customer_phone,
+    deliveryMethod: orderData.delivery_method || 'delivery',
+    shippingAddress: formatShippingAddress(orderData.shipping_address),
+    subtotal: Math.round(orderData.subtotal * 100), // Convert to cents
+    deliveryCost: Math.round((orderData.delivery_cost || 0) * 100), // Convert to cents
+    depositAmount: Math.round(orderData.deposit_amount * 100), // Convert to cents
+    balanceDue: Math.round(orderData.balance_due * 100), // Convert to cents
+    totalAmount: Math.round(orderData.total_amount * 100), // Convert to cents
+    items: orderData.items,
+    orderDate: new Date(orderData.created_at || Date.now()).toLocaleDateString('en-NZ', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
+  };
+
+  try {
+    // Render PDF to buffer
+    const pdfBuffer = await renderToBuffer(React.createElement(DepositInvoicePDF, pdfProps));
+
+    return sendEmail({
+      to: orderData.customer_email,
+      subject: `Deposit Received - Order #${orderData.order_number} - Club Caddy Carts`,
+      react: React.createElement(DepositConfirmationEmail, emailProps),
+      attachments: [
+        {
+          filename: `Invoice-${orderData.order_number}.pdf`,
+          content: pdfBuffer,
+        },
+      ],
+    });
+  } catch (pdfError) {
+    console.error('Failed to generate PDF invoice:', pdfError);
+    // Send email without PDF if PDF generation fails
+    return sendEmail({
+      to: orderData.customer_email,
+      subject: `Deposit Received - Order #${orderData.order_number} - Club Caddy Carts`,
+      react: React.createElement(DepositConfirmationEmail, emailProps),
+    });
+  }
 }
 
 export async function sendOrderBalanceInvoice(orderData: any) {

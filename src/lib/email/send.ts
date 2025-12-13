@@ -8,6 +8,10 @@ interface SendEmailOptions {
   replyTo?: string
   cc?: string | string[]
   bcc?: string | string[]
+  attachments?: Array<{
+    filename: string
+    content: Buffer | string
+  }>
 }
 
 /**
@@ -20,6 +24,7 @@ export async function sendEmail({
   replyTo,
   cc,
   bcc,
+  attachments,
 }: SendEmailOptions) {
   try {
     const html = await render(react, { pretty: false })
@@ -32,6 +37,7 @@ export async function sendEmail({
       replyTo,
       cc: cc ? (Array.isArray(cc) ? cc : [cc]) : undefined,
       bcc: bcc ? (Array.isArray(bcc) ? bcc : [bcc]) : undefined,
+      attachments,
     })
 
     if (error) {

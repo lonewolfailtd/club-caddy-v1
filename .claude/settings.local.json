@@ -52,7 +52,10 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Skill(frontend-design)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(set:*)",
+      "Bash(psql:*)",
+      "Bash(node scripts/run-orders-migration-direct.js:*)"
     ],
     "deny": [],
     "ask": []

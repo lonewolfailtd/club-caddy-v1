@@ -22,14 +22,14 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 199 89% 48%;
+    --ring: 0 0% 63.9%;
     --radius: 0.5rem;
 
-    /* Luxury Colors */
-    --luxury-gold: 45 77% 52%;
-    --luxury-platinum: 60 5% 90%;
-    --luxury-onyx: 0 0% 6%;
-    --luxury-pearl: 0 0% 98%;
+    /* Luxury Colors - Updated to Rose/Zinc Theme */
+    --luxury-gold: 346 77% 50%; /* rose-800 */
+    --luxury-platinum: 240 5% 84%; /* zinc-300 */
+    --luxury-onyx: 240 6% 10%; /* zinc-900 */
+    --luxury-pearl: 240 5% 96%; /* zinc-50 */
 
     /* Refined Elegance Theme - Rose/Burgundy Colors */
     --rose-800: 343 88% 28%;
@@ -57,7 +57,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 199 89% 48%;
+    --ring: 0 0% 83.1%;
   }
 }
 
@@ -68,6 +68,16 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Remove browser autofill blue/yellow background */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: inherit !important;
+    transition: background-color 5000s ease-in-out 0s;
   }
 }
 
@@ -103,15 +113,15 @@
   }
 
   .scrollbar-luxury::-webkit-scrollbar-track {
-    @apply bg-brand-pearl;
+    @apply bg-zinc-50;
   }
 
   .scrollbar-luxury::-webkit-scrollbar-thumb {
-    @apply bg-luxury-gold rounded-full;
+    @apply bg-rose-300 rounded-full;
   }
 
   .scrollbar-luxury::-webkit-scrollbar-thumb:hover {
-    @apply bg-luxury-gold-dark;
+    @apply bg-rose-400;
   }
 
   /* Thin scrollbar for chat */
@@ -132,10 +142,10 @@
   }
 }
 
-/* Luxury Gradient Text */
+/* Luxury Gradient Text - Updated to Rose Theme */
 @layer utilities {
   .text-gradient-luxury {
-    @apply bg-gradient-to-r from-luxury-gold via-gray-200 to-luxury-gold bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-rose-800 via-rose-400 to-rose-800 bg-clip-text text-transparent;
   }
 }
 
@@ -193,7 +203,7 @@
 
   .luxury-card::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-luxury-gold/5 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none;
+    @apply absolute inset-0 bg-gradient-to-br from-rose-800/5 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none;
   }
 
   .luxury-card:hover::before {
@@ -201,10 +211,10 @@
   }
 }
 
-/* Button Luxury Styles */
+/* Button Luxury Styles - Updated to Rose Theme */
 @layer components {
   .btn-luxury {
-    @apply relative overflow-hidden bg-gradient-to-r from-luxury-gold to-luxury-gold-dark text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105;
+    @apply relative overflow-hidden bg-gradient-to-r from-rose-800 to-rose-900 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105;
   }
 
   .btn-luxury::before {

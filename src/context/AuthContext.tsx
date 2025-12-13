@@ -19,7 +19,7 @@ interface AuthContextType {
   loading: boolean
   isAdmin: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>
+  signUp: (email: string, password: string, fullName: string) => Promise<{ user: User | null, error: any }>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<{ error: any }>
 }
@@ -50,6 +50,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       console.log('No profile data returned')
     }
+  }
+
+  const linkOrdersToUser = async (userId: string, email: string) => {
+    console.log('Linking orders to user:', userId, email)
+
+    // Link any existing orders with matching email and no user_id
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ user_id: userId })
+      .eq('customer_email', email)
+      .is('user_id', null)
+      .select()
+
+    if (error) {
+      console.error('Error linking orders:', error)
+    } else if (data && data.length > 0) {
+      console.log(`✅ Linked ${data.length} order(s) to user account`)
+    } else {
+      console.log('No orders to link')
+    }
+
+    return { data, error }
   }
 
   useEffect(() => {
@@ -85,12 +107,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
-    if (!error) {
+    if (!error && data.user) {
+      // Link any existing orders to this user account
+      await linkOrdersToUser(data.user.id, data.user.email!)
       router.push('/account')
     }
 
@@ -98,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -108,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
     })
 
-    return { error }
+    return { user: data.user, error }
   }
 
   const signOut = async () => {

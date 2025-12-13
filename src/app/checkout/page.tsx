@@ -15,8 +15,8 @@ interface FormData {
   fullName: string
   email: string
   phone: string
+  deliveryMethod: 'delivery' | 'pickup'
   addressLine1: string
-  addressLine2: string
   city: string
   postalCode: string
   region: string
@@ -34,6 +34,8 @@ interface FormErrors {
   region?: string
 }
 
+const DELIVERY_COST = 25000 // $250 delivery fee in cents
+
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart()
   const router = useRouter()
@@ -42,8 +44,8 @@ export default function CheckoutPage() {
     fullName: '',
     email: '',
     phone: '',
+    deliveryMethod: 'delivery',
     addressLine1: '',
-    addressLine2: '',
     city: '',
     postalCode: '',
     region: '',
@@ -51,6 +53,11 @@ export default function CheckoutPage() {
     specialInstructions: '',
   })
   const [formErrors, setFormErrors] = useState<FormErrors>({})
+
+  // Calculate total including delivery (convert cart.subtotal from dollars to cents)
+  const cartSubtotalInCents = cart.subtotal * 100
+  const deliveryCost = formData.deliveryMethod === 'delivery' ? DELIVERY_COST : 0
+  const totalAmount = cartSubtotalInCents + deliveryCost
 
   // Redirect to cart if empty
   useEffect(() => {
@@ -83,20 +90,23 @@ export default function CheckoutPage() {
       }
     }
 
-    if (!formData.addressLine1.trim()) {
-      errors.addressLine1 = 'Address is required'
-    }
+    // Only validate address if delivery is selected
+    if (formData.deliveryMethod === 'delivery') {
+      if (!formData.addressLine1.trim()) {
+        errors.addressLine1 = 'Address is required for delivery'
+      }
 
-    if (!formData.city.trim()) {
-      errors.city = 'City is required'
-    }
+      if (!formData.city.trim()) {
+        errors.city = 'City is required for delivery'
+      }
 
-    if (!formData.postalCode.trim()) {
-      errors.postalCode = 'Postal code is required'
-    }
+      if (!formData.postalCode.trim()) {
+        errors.postalCode = 'Postal code is required for delivery'
+      }
 
-    if (!formData.region.trim()) {
-      errors.region = 'Region/State is required'
+      if (!formData.region.trim()) {
+        errors.region = 'Region/State is required for delivery'
+      }
     }
 
     setFormErrors(errors)
@@ -140,17 +150,19 @@ export default function CheckoutPage() {
           customerName: formData.fullName,
           customerEmail: formData.email,
           customerPhone: formData.phone,
-          shippingAddress: {
+          deliveryMethod: formData.deliveryMethod,
+          shippingAddress: formData.deliveryMethod === 'delivery' ? {
             addressLine1: formData.addressLine1,
-            addressLine2: formData.addressLine2,
             city: formData.city,
             postalCode: formData.postalCode,
             region: formData.region,
             country: formData.country,
-          },
+          } : null,
           specialInstructions: formData.specialInstructions,
           items,
-          subtotal: cart.subtotal, // in cents
+          subtotal: cartSubtotalInCents, // in cents
+          deliveryCost, // in cents
+          totalAmount, // in cents
         }),
       })
 
@@ -196,10 +208,10 @@ export default function CheckoutPage() {
         <div className="mx-auto max-w-7xl">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-luxury-onyx sm:text-5xl">
+            <h1 className="refined-title text-4xl font-bold text-zinc-900 sm:text-5xl">
               Secure Checkout
             </h1>
-            <p className="mt-4 text-lg text-gray-600">
+            <p className="refined-body mt-4 text-lg text-zinc-600">
               Complete your order for premium Club Caddy golf carts
             </p>
           </div>
@@ -211,15 +223,15 @@ export default function CheckoutPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Contact Information Card */}
                 <div className="luxury-card p-6 sm:p-8">
-                  <h2 className="text-2xl font-bold text-luxury-onyx mb-6">
+                  <h2 className="refined-title text-2xl font-bold text-zinc-900 mb-6">
                     Contact Information
                   </h2>
 
                   <div className="space-y-6">
                     {/* Full Name */}
                     <div>
-                      <Label htmlFor="fullName" className="text-luxury-onyx">
-                        Full Name <span className="text-error">*</span>
+                      <Label htmlFor="fullName" className="refined-body text-zinc-900">
+                        Full Name <span className="text-red-600">*</span>
                       </Label>
                       <Input
                         id="fullName"
@@ -227,19 +239,19 @@ export default function CheckoutPage() {
                         required
                         value={formData.fullName}
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
-                        className={`mt-2 ${formErrors.fullName ? 'border-error' : ''}`}
+                        className={`mt-2 ${formErrors.fullName ? 'border-red-600' : ''}`}
                         placeholder="Name"
                       />
                       {formErrors.fullName && (
-                        <p className="mt-1 text-sm text-error">{formErrors.fullName}</p>
+                        <p className="mt-1 text-sm text-red-600">{formErrors.fullName}</p>
                       )}
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       {/* Email */}
                       <div>
-                        <Label htmlFor="email" className="text-luxury-onyx">
-                          Email Address <span className="text-error">*</span>
+                        <Label htmlFor="email" className="refined-body text-zinc-900">
+                          Email Address <span className="text-red-600">*</span>
                         </Label>
                         <Input
                           id="email"
@@ -247,18 +259,18 @@ export default function CheckoutPage() {
                           required
                           value={formData.email}
                           onChange={(e) => handleInputChange('email', e.target.value)}
-                          className={`mt-2 ${formErrors.email ? 'border-error' : ''}`}
+                          className={`mt-2 ${formErrors.email ? 'border-red-600' : ''}`}
                           placeholder="Email"
                         />
                         {formErrors.email && (
-                          <p className="mt-1 text-sm text-error">{formErrors.email}</p>
+                          <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
                         )}
                       </div>
 
                       {/* Phone */}
                       <div>
-                        <Label htmlFor="phone" className="text-luxury-onyx">
-                          Phone Number <span className="text-error">*</span>
+                        <Label htmlFor="phone" className="refined-body text-zinc-900">
+                          Phone Number <span className="text-red-600">*</span>
                         </Label>
                         <Input
                           id="phone"
@@ -266,22 +278,112 @@ export default function CheckoutPage() {
                           required
                           value={formData.phone}
                           onChange={(e) => handleInputChange('phone', e.target.value)}
-                          className={`mt-2 ${formErrors.phone ? 'border-error' : ''}`}
+                          className={`mt-2 ${formErrors.phone ? 'border-red-600' : ''}`}
                           placeholder="Phone number"
                         />
                         {formErrors.phone && (
-                          <p className="mt-1 text-sm text-error">{formErrors.phone}</p>
+                          <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
                         )}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Shipping Address Card */}
+                {/* Delivery Method Card */}
                 <div className="luxury-card p-6 sm:p-8">
-                  <h2 className="text-2xl font-bold text-luxury-onyx mb-6">
-                    Shipping Address
+                  <h2 className="refined-title text-2xl font-bold text-zinc-900 mb-6">
+                    Delivery Method
                   </h2>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Delivery Option */}
+                    <button
+                      type="button"
+                      onClick={() => handleInputChange('deliveryMethod', 'delivery')}
+                      className={`relative p-6 rounded-lg border-2 transition-all ${
+                        formData.deliveryMethod === 'delivery'
+                          ? 'border-rose-800 bg-rose-50'
+                          : 'border-zinc-200 bg-white hover:border-rose-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          formData.deliveryMethod === 'delivery'
+                            ? 'border-rose-800 bg-rose-800'
+                            : 'border-zinc-300'
+                        }`}>
+                          {formData.deliveryMethod === 'delivery' && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="flex items-center justify-between mb-1">
+                            <h3 className="refined-body font-semibold text-zinc-900">
+                              Home Delivery
+                            </h3>
+                            <span className="refined-body text-sm font-bold text-rose-800">
+                              {formatPrice(DELIVERY_COST / 100)}
+                            </span>
+                          </div>
+                          <p className="refined-body text-sm text-zinc-600">
+                            We'll deliver your golf cart to your address across New Zealand
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Pickup Option */}
+                    <button
+                      type="button"
+                      onClick={() => handleInputChange('deliveryMethod', 'pickup')}
+                      className={`relative p-6 rounded-lg border-2 transition-all ${
+                        formData.deliveryMethod === 'pickup'
+                          ? 'border-rose-800 bg-rose-50'
+                          : 'border-zinc-200 bg-white hover:border-rose-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          formData.deliveryMethod === 'pickup'
+                            ? 'border-rose-800 bg-rose-800'
+                            : 'border-zinc-300'
+                        }`}>
+                          {formData.deliveryMethod === 'pickup' && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="flex items-center justify-between mb-1">
+                            <h3 className="refined-body font-semibold text-zinc-900">
+                              Pickup
+                            </h3>
+                            <span className="refined-body text-sm font-bold text-green-700">
+                              Free
+                            </span>
+                          </div>
+                          <p className="refined-body text-sm text-zinc-600">
+                            Collect from our location with your own transport
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+
+                  {formData.deliveryMethod === 'pickup' && (
+                    <div className="mt-4 p-4 rounded-lg bg-blue-50 border border-blue-200">
+                      <p className="refined-body text-sm text-blue-900">
+                        <strong>Pickup Location:</strong> We'll contact you to arrange a convenient pickup time at our location.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Shipping Address Card - Only show if delivery selected */}
+                {formData.deliveryMethod === 'delivery' && (
+                  <div className="luxury-card p-6 sm:p-8">
+                    <h2 className="refined-title text-2xl font-bold text-zinc-900 mb-6">
+                      Delivery Address
+                    </h2>
 
                   <div className="space-y-6">
                     {/* Google Places Address Autocomplete */}
@@ -321,48 +423,39 @@ export default function CheckoutPage() {
                     {/* Show selected address details */}
                     {formData.addressLine1 && (
                       <div className="p-4 bg-gray-50 border border-gray-200 rounded-sm">
-                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Selected Shipping Address</p>
-                        <p className="text-sm text-luxury-onyx font-medium">
+                        <p className="refined-body text-xs text-gray-500 uppercase tracking-wider mb-2">Selected Shipping Address</p>
+                        <p className="refined-body text-sm text-zinc-900 font-medium">
                           {formData.addressLine1}
                         </p>
-                        <p className="text-sm text-gray-700">
+                        <p className="refined-body text-sm text-zinc-700">
                           {formData.city} {formData.postalCode}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="refined-body text-sm text-zinc-600">
                           {formData.country}
                         </p>
                       </div>
                     )}
+                  </div>
+                </div>
+                )}
 
-                    {/* Address Line 2 - Optional */}
-                    <div>
-                      <Label htmlFor="addressLine2" className="text-luxury-onyx">
-                        Address Line 2 <span className="text-gray-400">(Optional)</span>
-                      </Label>
-                      <Input
-                        id="addressLine2"
-                        type="text"
-                        value={formData.addressLine2}
-                        onChange={(e) => handleInputChange('addressLine2', e.target.value)}
-                        className="mt-2"
-                        placeholder="Apartment, suite, etc."
-                      />
-                    </div>
-
-                    {/* Special Instructions */}
-                    <div>
-                      <Label htmlFor="specialInstructions" className="text-luxury-onyx">
-                        Special Instructions <span className="text-gray-400">(Optional)</span>
-                      </Label>
-                      <Textarea
-                        id="specialInstructions"
-                        value={formData.specialInstructions}
-                        onChange={(e) => handleInputChange('specialInstructions', e.target.value)}
-                        className="mt-2"
-                        rows={4}
-                        placeholder="Any special delivery instructions or customization requests..."
-                      />
-                    </div>
+                {/* Special Instructions Card - Available for both delivery and pickup */}
+                <div className="luxury-card p-6 sm:p-8">
+                  <h2 className="refined-title text-2xl font-bold text-zinc-900 mb-6">
+                    Special Instructions
+                  </h2>
+                  <div>
+                    <Label htmlFor="specialInstructions" className="refined-body text-zinc-900">
+                      Additional Notes <span className="text-gray-400">(Optional)</span>
+                    </Label>
+                    <Textarea
+                      id="specialInstructions"
+                      value={formData.specialInstructions}
+                      onChange={(e) => handleInputChange('specialInstructions', e.target.value)}
+                      className="mt-2"
+                      rows={4}
+                      placeholder="Any customization requests or special notes..."
+                    />
                   </div>
                 </div>
 
@@ -370,15 +463,15 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn-luxury w-full py-4 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 text-lg font-bold bg-rose-800 hover:bg-rose-900 text-white rounded-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Processing Order...' : 'Place Order'}
                 </button>
 
                 {/* Security Notice */}
                 <div className="glass rounded-lg p-4 text-center">
-                  <p className="text-sm text-gray-600">
-                    <svg className="inline-block w-5 h-5 mr-2 text-luxury-gold" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                  <p className="refined-body text-sm text-zinc-600">
+                    <svg className="inline-block w-5 h-5 mr-2 text-rose-800" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                     </svg>
                     Your information is secure and encrypted
@@ -390,7 +483,7 @@ export default function CheckoutPage() {
             {/* Right Side - Order Summary */}
             <div className="lg:col-span-1">
               <div className="luxury-card p-6 sm:p-8 sticky top-24">
-                <h2 className="text-2xl font-bold text-luxury-onyx mb-6">
+                <h2 className="refined-title text-2xl font-bold text-zinc-900 mb-6">
                   Order Summary
                 </h2>
 
@@ -422,26 +515,26 @@ export default function CheckoutPage() {
 
                         {/* Product Details */}
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-luxury-onyx truncate">
+                          <h3 className="refined-body text-sm font-semibold text-zinc-900 truncate">
                             {item.productName}
                           </h3>
                           {item.variantName && (
-                            <p className="text-xs text-gray-500 mt-1">{item.variantName}</p>
+                            <p className="refined-body text-xs text-gray-500 mt-1">{item.variantName}</p>
                           )}
-                          <p className="text-xs text-gray-500 mt-1">Quantity: {item.quantity}</p>
+                          <p className="refined-body text-xs text-gray-500 mt-1">Quantity: {item.quantity}</p>
 
                           {/* Addons */}
                           {item.selectedAddons && item.selectedAddons.length > 0 && (
                             <div className="mt-2 space-y-1">
                               {item.selectedAddons.map((addon) => (
-                                <p key={addon.id} className="text-xs text-gray-600">
+                                <p key={addon.id} className="refined-body text-xs text-gray-600">
                                   + {addon.name} ({formatPrice(addon.price)})
                                 </p>
                               ))}
                             </div>
                           )}
 
-                          <p className="text-sm font-bold text-luxury-gold mt-2">
+                          <p className="refined-body text-sm font-bold text-rose-800 mt-2">
                             {formatPrice(itemTotal)}
                           </p>
                         </div>
@@ -453,50 +546,50 @@ export default function CheckoutPage() {
                 {/* Summary Totals */}
                 <div className="space-y-3 pt-4 border-t-2 border-gray-200">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal ({cart.totalItems} items)</span>
-                    <span className="font-semibold text-luxury-onyx">
+                    <span className="refined-body text-zinc-600">Subtotal ({cart.totalItems} items)</span>
+                    <span className="refined-body font-semibold text-zinc-900">
                       {formatPrice(cart.subtotal)}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-semibold text-luxury-onyx">
-                      Contact for quote
+                    <span className="refined-body text-zinc-600">Delivery</span>
+                    <span className={`refined-body font-semibold ${deliveryCost === 0 ? 'text-green-700' : 'text-zinc-900'}`}>
+                      {deliveryCost === 0 ? 'Free (Pickup)' : formatPrice(deliveryCost / 100)}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-lg font-bold pt-3 border-t-2 border-gray-200">
-                    <span className="text-luxury-onyx">Total</span>
-                    <span className="text-gradient-luxury">
-                      {formatPrice(cart.subtotal)}
+                    <span className="refined-title text-zinc-900">Total</span>
+                    <span className="refined-title text-rose-900">
+                      {formatPrice(totalAmount / 100)}
                     </span>
                   </div>
                 </div>
 
                 {/* Additional Info */}
-                <div className="mt-6 space-y-3 rounded-lg bg-gradient-to-br from-luxury-gold/10 to-transparent p-4 border border-luxury-gold/20">
+                <div className="mt-6 space-y-3 rounded-lg bg-gradient-to-br from-rose-50 to-transparent p-4 border border-rose-200">
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-luxury-gold flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <svg className="w-5 h-5 text-rose-800 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p className="text-sm text-gray-700">
+                    <p className="refined-body text-sm text-zinc-700">
                       Delivery in approximately 6 weeks
                     </p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-luxury-gold flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <svg className="w-5 h-5 text-rose-800 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p className="text-sm text-gray-700">
+                    <p className="refined-body text-sm text-zinc-700">
                       $1,000 deposit available
                     </p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-luxury-gold flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                    <svg className="w-5 h-5 text-rose-800 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p className="text-sm text-gray-700">
+                    <p className="refined-body text-sm text-zinc-700">
                       Email confirmation included
                     </p>
                   </div>
@@ -504,10 +597,10 @@ export default function CheckoutPage() {
 
                 {/* Contact Support */}
                 <div className="mt-6 text-center">
-                  <p className="text-sm text-gray-600 mb-2">Need assistance?</p>
+                  <p className="refined-body text-sm text-zinc-600 mb-2">Need assistance?</p>
                   <a
                     href="tel:+64021560307"
-                    className="text-sm font-semibold text-luxury-gold hover:text-luxury-gold-dark transition-colors"
+                    className="refined-body text-sm font-semibold text-rose-800 hover:text-rose-900 transition-colors"
                   >
                     +64-021-560-307
                   </a>
@@ -520,7 +613,7 @@ export default function CheckoutPage() {
           <div className="mt-8 text-center">
             <Link
               href="/cart"
-              className="inline-flex items-center text-luxury-gold hover:text-luxury-gold-dark font-semibold transition-colors"
+              className="refined-body inline-flex items-center text-rose-800 hover:text-rose-900 font-semibold transition-colors"
             >
               <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />

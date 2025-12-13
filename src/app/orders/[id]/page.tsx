@@ -8,7 +8,8 @@ import { CheckCircle, Package, Mail, Phone, Loader2, AlertCircle, ArrowLeft, Cre
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import AccountCreationPrompt from '@/components/auth/AccountCreationPrompt';
+import AccountCreationModal from '@/components/auth/AccountCreationModal';
+import { useAuth } from '@/context/AuthContext';
 
 interface Order {
   id: string;
@@ -34,10 +35,12 @@ export default function OrderConfirmationPage() {
   const searchParams = useSearchParams();
   const orderId = params.id as string;
   const isSuccess = searchParams.get('success') === 'true';
+  const { user } = useAuth();
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAccountModal, setShowAccountModal] = useState(false);
 
   useEffect(() => {
     async function fetchOrder() {
@@ -66,6 +69,17 @@ export default function OrderConfirmationPage() {
 
     fetchOrder();
   }, [orderId]);
+
+  // Show account creation modal on successful payment (if not logged in)
+  useEffect(() => {
+    if (isSuccess && !user && !loading && order) {
+      // Small delay to let the page load first
+      const timer = setTimeout(() => {
+        setShowAccountModal(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, user, loading, order]);
 
   if (loading) {
     return (
@@ -341,9 +355,11 @@ export default function OrderConfirmationPage() {
           </div>
         </motion.div>
 
-        {/* Account Creation Prompt - Only show on successful payment */}
-        {isSuccess && depositPaid && (
-          <AccountCreationPrompt
+        {/* Account Creation Modal - Only show on successful payment if not logged in */}
+        {order && (
+          <AccountCreationModal
+            isOpen={showAccountModal}
+            onClose={() => setShowAccountModal(false)}
             customerName={order.customer_name}
             customerEmail={order.customer_email}
             customerPhone={order.customer_phone}

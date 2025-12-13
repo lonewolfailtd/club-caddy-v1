@@ -20,6 +20,9 @@ interface DepositConfirmationEmailProps {
   depositAmount: number;
   balanceDue: number;
   totalAmount: number;
+  subtotal: number;
+  deliveryCost: number;
+  deliveryMethod: 'delivery' | 'pickup';
   items: Array<{
     productName: string;
     variantName?: string;
@@ -35,12 +38,15 @@ export const DepositConfirmationEmail = ({
   depositAmount = 3000,
   balanceDue = 12000,
   totalAmount = 15000,
+  subtotal = 12500,
+  deliveryCost = 150,
+  deliveryMethod = 'delivery',
   items = [
     {
       productName: 'Premium Golf Cart',
       variantName: 'Blue Metallic',
       quantity: 1,
-      total: 15000,
+      total: 12500,
     },
   ],
   orderUrl = 'https://clubcaddycarts.com/orders/123',
@@ -65,7 +71,6 @@ export const DepositConfirmationEmail = ({
 
           {/* Success Icon */}
           <Section style={successSection}>
-            <div style={successIcon}>✅</div>
             <Heading style={h1}>Deposit Payment Confirmed!</Heading>
             <Text style={text}>
               Thank you, {customerName}! We've received your deposit and your order is now being processed.
@@ -88,12 +93,20 @@ export const DepositConfirmationEmail = ({
 
             <table style={table}>
               <tr>
+                <td style={tableLabel}>Subtotal:</td>
+                <td style={tableValue}>${subtotal.toFixed(2)} NZD</td>
+              </tr>
+              <tr>
+                <td style={tableLabel}>Delivery ({deliveryMethod === 'delivery' ? 'Home Delivery' : 'Pickup'}):</td>
+                <td style={tableValue}>{deliveryMethod === 'delivery' ? `$${deliveryCost.toFixed(2)} NZD` : 'Free'}</td>
+              </tr>
+              <tr style={{borderTop: '1px solid #e2e8f0'}}>
                 <td style={tableLabel}>Total Order Amount:</td>
                 <td style={tableValue}>${totalAmount.toFixed(2)} NZD</td>
               </tr>
               <tr>
                 <td style={tableLabel}>Deposit Paid Today:</td>
-                <td style={tableValueGreen}>${depositAmount.toFixed(2)} NZD ✓</td>
+                <td style={tableValueGreen}>${depositAmount.toFixed(2)} NZD</td>
               </tr>
               <tr style={totalRow}>
                 <td style={tableLabelBold}>Balance Due Later:</td>
@@ -124,7 +137,7 @@ export const DepositConfirmationEmail = ({
                   )}
                   <Text style={itemQuantity}>Quantity: {item.quantity}</Text>
                 </div>
-                <div style={itemPrice}>${(item.total / 100).toFixed(2)}</div>
+                <div style={itemPrice}>${item.total.toFixed(2)}</div>
               </div>
             ))}
           </Section>
@@ -227,7 +240,7 @@ const container = {
 const header = {
   padding: '32px 20px',
   textAlign: 'center' as const,
-  backgroundColor: '#9f1239',
+  backgroundColor: '#9f1239', // rose-800
 };
 
 const logo = {
@@ -351,15 +364,15 @@ const tableValueBold = {
 };
 
 const infoBox = {
-  backgroundColor: '#dbeafe',
-  borderLeft: '4px solid #3b82f6',
+  backgroundColor: '#fef2f2', // rose-50
+  borderLeft: '4px solid #9f1239', // rose-800
   padding: '12px 16px',
   margin: '16px',
   borderRadius: '4px',
 };
 
 const infoBoxText = {
-  color: '#1e40af',
+  color: '#881337', // rose-900
   fontSize: '14px',
   margin: '0',
   lineHeight: '20px',
@@ -442,7 +455,7 @@ const stepNumber = {
   width: '32px',
   height: '32px',
   borderRadius: '50%',
-  backgroundColor: '#9f1239',
+  backgroundColor: '#9f1239', // rose-800
   color: '#ffffff',
   display: 'flex',
   alignItems: 'center',
@@ -486,4 +499,44 @@ const copyright = {
   color: '#94a3b8',
   fontSize: '12px',
   margin: '16px 0 0',
+};
+
+const accountSection = {
+  padding: '24px 20px',
+  textAlign: 'center' as const,
+};
+
+const accountBox = {
+  backgroundColor: '#fef3c7',
+  borderLeft: '4px solid #f59e0b',
+  padding: '20px',
+  borderRadius: '8px',
+  textAlign: 'center' as const,
+};
+
+const accountTitle = {
+  color: '#78350f',
+  fontSize: '18px',
+  fontWeight: 'bold',
+  margin: '0 0 8px',
+};
+
+const accountText = {
+  color: '#92400e',
+  fontSize: '14px',
+  lineHeight: '20px',
+  margin: '0 0 16px',
+};
+
+const accountButton = {
+  backgroundColor: '#f59e0b',
+  borderRadius: '4px',
+  color: '#fff',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  textDecoration: 'none',
+  textAlign: 'center' as const,
+  display: 'inline-block',
+  padding: '12px 32px',
+  margin: '8px auto',
 };
